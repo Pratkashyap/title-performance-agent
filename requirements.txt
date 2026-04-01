@@ -1,0 +1,19 @@
+# Core AI
+anthropic==0.84.0
+
+# Database
+duckdb==1.5.0
+
+# Data Processing
+pandas==2.3.3
+numpy==2.4.3
+
+# Dashboard & Visualisation
+streamlit==1.55.0
+plotly==6.6.0
+
+# Terminal UI
+rich==14.3.3
+
+# Environment
+python-dotenv==1.1.1
