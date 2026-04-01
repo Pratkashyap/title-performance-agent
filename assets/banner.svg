@@ -1,0 +1,65 @@
+<svg viewBox="0 0 960 220" xmlns="http://www.w3.org/2000/svg" width="960" height="220">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6366f1"/>
+      <stop offset="100%" style="stop-color:#a855f7"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="960" height="220" fill="url(#bg)" rx="12"/>
+
+  <!-- Accent bar -->
+  <rect x="0" y="0" width="5" height="220" fill="url(#accent)" rx="2"/>
+
+  <!-- Top label -->
+  <text x="48" y="48" font-family="monospace" font-size="11" fill="#6366f1" letter-spacing="3" font-weight="600">MULTI-AGENT AI SYSTEM</text>
+
+  <!-- Main title -->
+  <text x="48" y="100" font-family="system-ui, -apple-system, sans-serif" font-size="42" fill="#f8fafc" font-weight="700" letter-spacing="-1">Title Performance Analyst</text>
+
+  <!-- Subtitle -->
+  <text x="48" y="136" font-family="system-ui, -apple-system, sans-serif" font-size="16" fill="#94a3b8" font-weight="400">Ask any question about how a title is performing. Get a structured answer in seconds.</text>
+
+  <!-- Divider -->
+  <line x1="48" y1="156" x2="912" y2="156" stroke="#334155" stroke-width="1"/>
+
+  <!-- Agent pills -->
+  <g font-family="monospace" font-size="11" font-weight="500">
+    <!-- Orchestrator -->
+    <rect x="48" y="170" width="108" height="26" fill="#1e293b" rx="5" stroke="#6366f1" stroke-width="1"/>
+    <text x="102" y="187" fill="#6366f1" text-anchor="middle">🧠 Orchestrator</text>
+
+    <!-- Data Agent -->
+    <rect x="166" y="170" width="100" height="26" fill="#1e293b" rx="5" stroke="#0ea5e9" stroke-width="1"/>
+    <text x="216" y="187" fill="#0ea5e9" text-anchor="middle">📊 Data Agent</text>
+
+    <!-- Performance Analyst -->
+    <rect x="276" y="170" width="150" height="26" fill="#1e293b" rx="5" stroke="#a855f7" stroke-width="1"/>
+    <text x="351" y="187" fill="#a855f7" text-anchor="middle">🔍 Perf. Analyst</text>
+
+    <!-- Benchmark -->
+    <rect x="436" y="170" width="128" height="26" fill="#1e293b" rx="5" stroke="#0ea5e9" stroke-width="1"/>
+    <text x="500" y="187" fill="#0ea5e9" text-anchor="middle">📐 Benchmark</text>
+
+    <!-- Trend -->
+    <rect x="574" y="170" width="90" height="26" fill="#1e293b" rx="5" stroke="#0ea5e9" stroke-width="1"/>
+    <text x="619" y="187" fill="#0ea5e9" text-anchor="middle">📈 Trend</text>
+
+    <!-- Subscriber -->
+    <rect x="674" y="170" width="110" height="26" fill="#1e293b" rx="5" stroke="#a855f7" stroke-width="1"/>
+    <text x="729" y="187" fill="#a855f7" text-anchor="middle">👤 Subscriber</text>
+
+    <!-- Alert -->
+    <rect x="794" y="170" width="80" height="26" fill="#1e293b" rx="5" stroke="#f59e0b" stroke-width="1"/>
+    <text x="834" y="187" fill="#f59e0b" text-anchor="middle">🚨 Alert</text>
+
+    <!-- Critic -->
+    <rect x="884" y="170" width="68" height="26" fill="#1e293b" rx="5" stroke="#10b981" stroke-width="1"/>
+    <text x="918" y="187" fill="#10b981" text-anchor="middle">⚖️ Critic</text>
+  </g>
+</svg>
