@@ -5,10 +5,11 @@ WBD APAC — Title Performance Analyst
 Central routing agent. Receives all user questions, classifies into A/B/C/D/E/F,
 routes to the correct specialist agents, and synthesises the final answer.
 
-Phase 2 routes:
+Phase 3 routes:
   Cat A → Data Agent (x2) → Performance Analyst
-  Cat B → Data Agent (x1-2) → Performance Analyst
-  Cat C/D/E/F → Data Agent (x1) → data_only formatted table (Phase 3+ agents not built yet)
+  Cat B → Data Agent (x1) → BenchmarkAgent + Performance Analyst → combined response
+  Cat C → Data Agent (x1) → TrendAgent → trend report
+  Cat D/E/F → Data Agent (x1) → data_only formatted table (Phase 4+ agents not built yet)
 
 Model: Claude Haiku 4.5 (fast classification)
 """
@@ -23,6 +24,8 @@ from dotenv import load_dotenv
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 from agents.data_agent          import DataAgent
 from agents.performance_analyst import PerformanceAnalyst
+from agents.benchmark_agent     import BenchmarkAgent
+from agents.trend_agent         import TrendAgent
 
 _env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../.env")
 load_dotenv(_env_path, override=True)
@@ -66,7 +69,7 @@ Respond with ONLY a JSON object (no other text):
 }
 
 Set needs_analysis=true for categories A and B.
-Set needs_analysis=false for C, D, E, F (data_only in Phase 2).
+Set needs_analysis=false for C, D, E, F.
 Set out_of_scope=true ONLY for questions completely unrelated to streaming/content performance.
 When in doubt, default to category B, needs_analysis=true."""
 
@@ -77,6 +80,8 @@ class Orchestrator:
         self.model               = "claude-haiku-4-5-20251001"
         self.data_agent          = DataAgent()
         self.performance_analyst = PerformanceAnalyst()
+        self.benchmark_agent     = BenchmarkAgent()
+        self.trend_agent         = TrendAgent()
 
     # ── Classification ────────────────────────────────────────
 
@@ -228,11 +233,11 @@ class Orchestrator:
         # ── Step 2: Routing label ─────────────────────────────
         cat_labels = {
             "A": "Cat A — Diagnosis  → Data Agent (x2) → Performance Analyst",
-            "B": "Cat B — Snapshot   → Data Agent (x1) → Performance Analyst",
-            "C": "Cat C — Trends     → Data Agent (data only in Phase 2)",
-            "D": "Cat D — Genre/Cat  → Data Agent (data only in Phase 2)",
-            "E": "Cat E — Subscriber → Data Agent (data only in Phase 2)",
-            "F": "Cat F — Alerts     → Data Agent (data only in Phase 2)",
+            "B": "Cat B — Snapshot   → Data Agent (x1) → Benchmark Agent + Performance Analyst",
+            "C": "Cat C — Trends     → Data Agent (x2) → Trend Agent",
+            "D": "Cat D — Genre/Cat  → Data Agent (data only — Phase 4)",
+            "E": "Cat E — Subscriber → Data Agent (data only — Phase 5)",
+            "F": "Cat F — Alerts     → Data Agent (data only — Phase 6)",
         }
         emit("orchestrator", "routing", cat_labels.get(category, "→ Data Agent"))
 
@@ -252,16 +257,42 @@ class Orchestrator:
         emit("data_agent", "done",
              str(primary.get("row_count", 0)))
 
-        # ── Step 4: Cat C/D/E/F → data only ──────────────────
-        if not needs_analysis:
+        # ── Step 4: Cat D/E/F → data only (Phase 4–6 not built) ─
+        if category in ("D", "E", "F"):
             emit("orchestrator", "done")
             return self._data_only_response(question, category, primary)
 
-        # ── Step 5: Cat A/B → fetch benchmark supplement ─────
+        # ── Step 5: Cat C → Trend Agent ──────────────────────
+        if category == "C":
+            emit("trend_agent", "start")
+            trend_result = self.trend_agent.analyse(
+                question=question,
+                primary_data=primary,
+                on_status=on_status,
+            )
+            if trend_result.get("error"):
+                return {
+                    "question": question, "category": category,
+                    "response": f"Trend analysis failed: {trend_result['error']}",
+                    "data":     primary.get("data"),
+                    "error":    trend_result["error"],
+                }
+            emit("orchestrator", "done")
+            return {
+                "question": question,
+                "category": category,
+                "response": trend_result["insight"],
+                "data":     primary.get("data"),
+                "sql":      primary.get("sql"),
+                "trend":    trend_result.get("trend_direction"),
+                "error":    None,
+            }
+
+        # ── Step 6: Cat A/B → fetch benchmark supplement ─────
         data_results = [primary]
 
         if category == "A":
-            # For diagnosis, also fetch genre/benchmark comparison
+            # Diagnosis: also fetch genre/benchmark context
             bench_q = (
                 f"What are the genre average completion rate, "
                 f"average starts day 7, and average starts day 30 "
@@ -275,29 +306,47 @@ class Orchestrator:
                 emit("data_agent", "done",
                      f"+ {bench_r.get('row_count', 0)} benchmark rows")
 
-        # ── Step 6: Performance Analyst ──────────────────────
+        # ── Step 7: Performance Analyst (Cat A + B) ───────────
         emit("performance_analyst", "start")
-        result = self.performance_analyst.analyse(
+        analyst_result = self.performance_analyst.analyse(
             question=question,
             category=category,
             data_results=data_results,
             on_status=on_status,
         )
 
-        if result.get("error"):
+        if analyst_result.get("error"):
             return {
                 "question": question, "category": category,
-                "response": f"Analysis failed: {result['error']}",
+                "response": f"Analysis failed: {analyst_result['error']}",
                 "data":     primary.get("data"),
-                "error":    result["error"],
+                "error":    analyst_result["error"],
             }
+
+        # ── Step 8: Cat B → Benchmark Agent enrichment ────────
+        final_response = analyst_result["insight"]
+
+        if category == "B":
+            emit("benchmark_agent", "start")
+            bench_result = self.benchmark_agent.analyse(
+                question=question,
+                primary_data=primary,
+                on_status=on_status,
+            )
+            if bench_result.get("insight") and not bench_result.get("error"):
+                # Append peer comparison section below the snapshot
+                final_response = (
+                    analyst_result["insight"]
+                    + "\n\n"
+                    + bench_result["insight"]
+                )
 
         emit("orchestrator", "done")
 
         return {
             "question": question,
             "category": category,
-            "response": result["insight"],
+            "response": final_response,
             "data":     primary.get("data"),
             "sql":      primary.get("sql"),
             "error":    None,
@@ -345,7 +394,11 @@ if __name__ == "__main__":
 
         ok     = result.get("error") is None
         cat    = result.get("category", "?")
-        routed = "PerformanceAnalyst" if cat in ("A", "B") else "DataOnly"
+        routed = {
+            "A": "PerfAnalyst",
+            "B": "Bench+Analyst",
+            "C": "TrendAgent",
+        }.get(cat, "DataOnly")
         status = "[green]✅[/green]" if ok else "[red]❌[/red]"
 
         tbl.add_row(cat, q[:52], routed, status)
@@ -359,6 +412,6 @@ if __name__ == "__main__":
     console.print(tbl)
     console.print(f"\n[bold]Result: {passed}/{len(tests)} passed[/bold]")
     if passed == len(tests):
-        console.print("[bold green]✅ Orchestrator fully operational. Phase 2 complete.[/bold green]\n")
+        console.print("[bold green]✅ Orchestrator fully operational. Phase 3 complete.[/bold green]\n")
     else:
         console.print(f"[bold yellow]⚠️  {len(tests)-passed} tests failed.[/bold yellow]\n")

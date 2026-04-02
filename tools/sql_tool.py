@@ -143,6 +143,12 @@ SQL RULES — ALWAYS FOLLOW THESE
   BAD:  SELECT t.title_name, t.genre, SUM(v.starts) FROM ... GROUP BY t.title_name
   GOOD: SELECT t.title_name, t.genre, SUM(v.starts) FROM ... GROUP BY t.title_name, t.genre
 - When in doubt about GROUP BY, use ANY_VALUE(col) for non-aggregated columns you don't want to group by
+- WEEKLY GROUPING rule: date is VARCHAR — to group by week, CAST first then truncate.
+  ALWAYS repeat the full expression in GROUP BY (never use the alias):
+  BAD:  SELECT DATE_TRUNC('week', date) AS week_start, SUM(starts) GROUP BY week_start
+  GOOD: SELECT DATE_TRUNC('week', CAST(date AS DATE)) AS week_start, SUM(starts)
+        GROUP BY DATE_TRUNC('week', CAST(date AS DATE))
+  If referencing date.column via alias, repeat the cast expression in GROUP BY too.
 """
 
 

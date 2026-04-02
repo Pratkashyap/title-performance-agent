@@ -6,7 +6,7 @@
 | 0 | Schema design + DuckDB data generation | ✅ Complete | Apr 2026 |
 | 1 | Data Agent + sql_tool (DuckDB query layer) | ✅ Complete | Apr 2026 |
 | 2 | Orchestrator + Performance Analyst (Cat A + B) | ✅ Complete | Apr 2026 |
-| 3 | Benchmark Agent + Trend Agent (Cat B + C) | — | — |
+| 3 | Benchmark Agent + Trend Agent (Cat B + C) | ✅ Complete | Apr 2026 |
 | 4 | Genre & Catalog Agent (Cat D) | — | — |
 | 5 | Subscriber Behaviour Agent (Cat E) | — | — |
 | 6 | Alert Agent (Cat F) | — | — |
@@ -15,6 +15,15 @@
 | 9 | End-to-end testing (all 5 test cases) | — | — |
 
 ---
+
+## Phase 3 — Notes
+- `agents/benchmark_agent.py` — Haiku; fetches genre benchmarks + peer group (same-genre titles last 30d); computes ±% deltas vs genre avg; produces PEER GROUP COMPARISON section
+- `agents/trend_agent.py` — Haiku; fetches weekly aggregated viewership + market-level WoW data; produces TREND ANALYSIS with momentum verdict (GROWING/DECLINING/STABLE/RECOVERING/AT RISK)
+- `agents/orchestrator.py` — Updated: Cat B now routes through BenchmarkAgent + PerformanceAnalyst (combined response); Cat C routes through TrendAgent; Cat D/E/F remain data-only (Phase 4–6)
+- `tools/sql_tool.py` — Added WEEKLY GROUPING rule: use `DATE_TRUNC('week', CAST(date AS DATE))` and repeat full expression in GROUP BY (not alias)
+- Cat B response = PerformanceAnalyst snapshot + BenchmarkAgent peer comparison (two sections combined)
+- Cat C response = TrendAgent WoW momentum analysis (sole specialist for Cat C)
+- 6/6 question categories passing end-to-end after weekly GROUP BY fix
 
 ## Phase 2 — Notes
 - `agents/orchestrator.py` — Classifies A/B/C/D/E/F via Haiku; routes Cat A/B to PerformanceAnalyst, C/D/E/F data-only (Phase 3+ placeholder)

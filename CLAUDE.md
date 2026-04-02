@@ -27,8 +27,8 @@ With: Natural language question → structured answer (< 15 seconds)
 | 0 | Schema + DuckDB data generation | ✅ Complete |
 | 1 | Data Agent + sql_tool | ✅ Complete |
 | 2 | Orchestrator + Performance Analyst (Cat A+B) | ✅ Complete |
-| 3 | Benchmark Agent + Trend Agent (Cat B+C) | ⬜ Next |
-| 4 | Genre & Catalog Agent (Cat D) | ⬜ |
+| 3 | Benchmark Agent + Trend Agent (Cat B+C) | ✅ Complete |
+| 4 | Genre & Catalog Agent (Cat D) | ⬜ Next |
 | 5 | Subscriber Behaviour Agent (Cat E) | ⬜ |
 | 6 | Alert Agent (Cat F) | ⬜ |
 | 7 | Quality Critic | ⬜ |
@@ -203,4 +203,4 @@ All projects share this same architecture and DuckDB foundation.
 - Subscriber data is session-level, not event-level
 
 ---
-*Last updated: April 2026 | Current phase: Phase 2 complete → Phase 3 next (Benchmark + Trend Agents)*
+*Last updated: April 2026 | Current phase: Phase 3 complete → Phase 4 next (Genre & Catalog Agent)*
