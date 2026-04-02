@@ -9,12 +9,20 @@
 | 3 | Benchmark Agent + Trend Agent (Cat B + C) | ✅ Complete | Apr 2026 |
 | 4 | Genre & Catalog Agent (Cat D) | ✅ Complete | Apr 2026 |
 | 5 | Subscriber Behaviour Agent (Cat E) | ✅ Complete | Apr 2026 |
-| 6 | Alert Agent (Cat F) | — | — |
+| 6 | Alert Agent (Cat F) | ✅ Complete | Apr 2026 |
 | 7 | Quality Critic integration | — | — |
 | 8 | Dashboard Agent (Streamlit) | — | — |
 | 9 | End-to-end testing (all 5 test cases) | — | — |
 
 ---
+
+## Phase 6 — Notes
+- `agents/alert_agent.py` — Haiku; 3 dedicated scans: WoW drop scan (titles with >10% WoW starts decline), low completion scan (completion <50%, starts >100 in last 7d), new launch scan (titles released in last 30d vs genre day-7 benchmark)
+- `agents/orchestrator.py` — Cat F now routes through AlertAgent (was data-only stub); all 6 categories now have dedicated specialist agents
+- Alert severity: 🔴 CRITICAL ≥30% WoW drop or <35% completion | 🟡 WARNING 15–29% drop or 35–49% completion | 🟢 WATCH 10–14% drop or new launch below benchmark
+- WoW scan: CASE-based week aggregation within a single query (avoids self-join); HAVING clause filters to declining titles only
+- 3/3 self-tests passing; WoW scan returns 0 (all titles stable in simulated data — expected), completion scan flags 5 titles
+- All 6 question categories (A–F) now fully operational end-to-end
 
 ## Phase 5 — Notes
 - `agents/subscriber_agent.py` — Sonnet 4.6; 3 dedicated fetches: segment breakdown (who watches, how much), churn rate by segment + plan type, completion/watch depth by plan type; produces SUBSCRIBER BEHAVIOUR ANALYSIS section

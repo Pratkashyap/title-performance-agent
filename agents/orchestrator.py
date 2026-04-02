@@ -5,13 +5,13 @@ WBD APAC — Title Performance Analyst
 Central routing agent. Receives all user questions, classifies into A/B/C/D/E/F,
 routes to the correct specialist agents, and synthesises the final answer.
 
-Phase 5 routes:
+Phase 6 routes:
   Cat A → Data Agent (x2) → Performance Analyst
   Cat B → Data Agent (x1) → BenchmarkAgent + Performance Analyst → combined response
   Cat C → Data Agent (x1) → TrendAgent → trend report
   Cat D → Data Agent (x1) → GenreCatalogAgent → catalog + genre health report
   Cat E → Data Agent (x1) → SubscriberAgent → subscriber behaviour report
-  Cat F → Data Agent (x1) → data_only formatted table (Phase 6 not built yet)
+  Cat F → Data Agent (x1) → AlertAgent → prioritised alert bulletin
 
 Model: Claude Haiku 4.5 (fast classification)
 """
@@ -30,6 +30,7 @@ from agents.benchmark_agent       import BenchmarkAgent
 from agents.trend_agent           import TrendAgent
 from agents.genre_catalog_agent   import GenreCatalogAgent
 from agents.subscriber_agent      import SubscriberAgent
+from agents.alert_agent           import AlertAgent
 
 _env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../.env")
 load_dotenv(_env_path, override=True)
@@ -88,6 +89,7 @@ class Orchestrator:
         self.trend_agent          = TrendAgent()
         self.genre_catalog_agent  = GenreCatalogAgent()
         self.subscriber_agent     = SubscriberAgent()
+        self.alert_agent          = AlertAgent()
 
     # ── Classification ────────────────────────────────────────
 
@@ -243,7 +245,7 @@ class Orchestrator:
             "C": "Cat C — Trends     → Data Agent (x2) → Trend Agent",
             "D": "Cat D — Genre/Cat  → Data Agent (x1) → Genre & Catalog Agent",
             "E": "Cat E — Subscriber → Data Agent (x1) → Subscriber Agent",
-            "F": "Cat F — Alerts     → Data Agent (data only — Phase 6)",
+            "F": "Cat F — Alerts     → Data Agent (x1) → Alert Agent",
         }
         emit("orchestrator", "routing", cat_labels.get(category, "→ Data Agent"))
 
@@ -263,10 +265,31 @@ class Orchestrator:
         emit("data_agent", "done",
              str(primary.get("row_count", 0)))
 
-        # ── Step 4: Cat F → data only (Phase 6 not built yet) ────
+        # ── Step 4: Cat F → Alert Agent ───────────────────────
         if category == "F":
+            emit("alert_agent", "start")
+            alert_result = self.alert_agent.analyse(
+                question=question,
+                primary_data=primary,
+                on_status=on_status,
+            )
+            if alert_result.get("error"):
+                return {
+                    "question": question, "category": category,
+                    "response": f"Alert scan failed: {alert_result['error']}",
+                    "data":     primary.get("data"),
+                    "error":    alert_result["error"],
+                }
             emit("orchestrator", "done")
-            return self._data_only_response(question, category, primary)
+            return {
+                "question": question,
+                "category": category,
+                "response": alert_result["insight"],
+                "data":     primary.get("data"),
+                "sql":      primary.get("sql"),
+                "alerts":   alert_result.get("alerts_found"),
+                "error":    None,
+            }
 
         # ── Step 4a: Cat E → Subscriber Agent ────────────────
         if category == "E":
@@ -458,6 +481,7 @@ if __name__ == "__main__":
             "C": "TrendAgent",
             "D": "CatalogAgent",
             "E": "SubscriberAgent",
+            "F": "AlertAgent",
         }.get(cat, "DataOnly")
         status = "[green]✅[/green]" if ok else "[red]❌[/red]"
 
@@ -472,6 +496,6 @@ if __name__ == "__main__":
     console.print(tbl)
     console.print(f"\n[bold]Result: {passed}/{len(tests)} passed[/bold]")
     if passed == len(tests):
-        console.print("[bold green]✅ Orchestrator fully operational. Phase 5 complete.[/bold green]\n")
+        console.print("[bold green]✅ Orchestrator fully operational. Phase 6 complete.[/bold green]\n")
     else:
         console.print(f"[bold yellow]⚠️  {len(tests)-passed} tests failed.[/bold yellow]\n")
