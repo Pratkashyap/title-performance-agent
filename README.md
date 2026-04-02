@@ -282,11 +282,11 @@ The simulated dataset includes:
 ```
 ✅  Phase 0 — Schema design + simulated data generation (59 titles, ~92K rows)
 ✅  Phase 1 — Data Agent + SQL tool (8/8 category tests passing)
-🔨  Phase 2 — Orchestrator + Performance Analyst (Category A + B)
-⬜  Phase 3 — Benchmark Agent + Trend Agent (Category B + C)
-⬜  Phase 4 — Genre & Catalog Agent (Category D)
-⬜  Phase 5 — Subscriber Agent (Category E)
-⬜  Phase 6 — Alert Agent (Category F)
+✅  Phase 2 — Orchestrator + Performance Analyst (Category A + B)
+✅  Phase 3 — Benchmark Agent + Trend Agent (Category B + C)
+✅  Phase 4 — Genre & Catalog Agent (Category D)
+✅  Phase 5 — Subscriber Behaviour Agent (Category E)
+🔨  Phase 6 — Alert Agent (Category F)
 ⬜  Phase 7 — Quality Critic integration
 ⬜  Phase 8 — Dashboard Agent (Streamlit)
 ⬜  Phase 9 — End-to-end testing

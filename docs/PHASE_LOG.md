@@ -8,13 +8,22 @@
 | 2 | Orchestrator + Performance Analyst (Cat A + B) | ✅ Complete | Apr 2026 |
 | 3 | Benchmark Agent + Trend Agent (Cat B + C) | ✅ Complete | Apr 2026 |
 | 4 | Genre & Catalog Agent (Cat D) | ✅ Complete | Apr 2026 |
-| 5 | Subscriber Behaviour Agent (Cat E) | — | — |
+| 5 | Subscriber Behaviour Agent (Cat E) | ✅ Complete | Apr 2026 |
 | 6 | Alert Agent (Cat F) | — | — |
 | 7 | Quality Critic integration | — | — |
 | 8 | Dashboard Agent (Streamlit) | — | — |
 | 9 | End-to-end testing (all 5 test cases) | — | — |
 
 ---
+
+## Phase 5 — Notes
+- `agents/subscriber_agent.py` — Sonnet 4.6; 3 dedicated fetches: segment breakdown (who watches, how much), churn rate by segment + plan type, completion/watch depth by plan type; produces SUBSCRIBER BEHAVIOUR ANALYSIS section
+- `agents/orchestrator.py` — Cat E now routes through SubscriberAgent (was data-only stub); Cat F remains data-only (Phase 6)
+- Churn signal thresholds: 🟢 <5% | 🟡 5–12% | 🔴 >12% churn rate
+- Engagement depth: deep ≥45 mins | moderate 20–44 mins | shallow <20 mins
+- Title hint extraction: maps question text to known title names for targeted SQL filters
+- 3/3 self-tests passing: churn risk, segment analysis, plan-type retention
+- 6/6 question categories passing end-to-end
 
 ## Phase 4 — Notes
 - `agents/genre_catalog_agent.py` — Haiku; 3 dedicated fetches: genre-level aggregates, engagement gap titles (high starts/low completion), top 10 performers by starts; produces CATALOG & GENRE ANALYSIS section
