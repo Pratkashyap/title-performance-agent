@@ -5,12 +5,13 @@ WBD APAC — Title Performance Analyst
 Central routing agent. Receives all user questions, classifies into A/B/C/D/E/F,
 routes to the correct specialist agents, and synthesises the final answer.
 
-Phase 4 routes:
+Phase 5 routes:
   Cat A → Data Agent (x2) → Performance Analyst
   Cat B → Data Agent (x1) → BenchmarkAgent + Performance Analyst → combined response
   Cat C → Data Agent (x1) → TrendAgent → trend report
   Cat D → Data Agent (x1) → GenreCatalogAgent → catalog + genre health report
-  Cat E/F → Data Agent (x1) → data_only formatted table (Phase 5–6 agents not built yet)
+  Cat E → Data Agent (x1) → SubscriberAgent → subscriber behaviour report
+  Cat F → Data Agent (x1) → data_only formatted table (Phase 6 not built yet)
 
 Model: Claude Haiku 4.5 (fast classification)
 """
@@ -28,6 +29,7 @@ from agents.performance_analyst   import PerformanceAnalyst
 from agents.benchmark_agent       import BenchmarkAgent
 from agents.trend_agent           import TrendAgent
 from agents.genre_catalog_agent   import GenreCatalogAgent
+from agents.subscriber_agent      import SubscriberAgent
 
 _env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../.env")
 load_dotenv(_env_path, override=True)
@@ -85,6 +87,7 @@ class Orchestrator:
         self.benchmark_agent      = BenchmarkAgent()
         self.trend_agent          = TrendAgent()
         self.genre_catalog_agent  = GenreCatalogAgent()
+        self.subscriber_agent     = SubscriberAgent()
 
     # ── Classification ────────────────────────────────────────
 
@@ -239,7 +242,7 @@ class Orchestrator:
             "B": "Cat B — Snapshot   → Data Agent (x1) → Benchmark Agent + Performance Analyst",
             "C": "Cat C — Trends     → Data Agent (x2) → Trend Agent",
             "D": "Cat D — Genre/Cat  → Data Agent (x1) → Genre & Catalog Agent",
-            "E": "Cat E — Subscriber → Data Agent (data only — Phase 5)",
+            "E": "Cat E — Subscriber → Data Agent (x1) → Subscriber Agent",
             "F": "Cat F — Alerts     → Data Agent (data only — Phase 6)",
         }
         emit("orchestrator", "routing", cat_labels.get(category, "→ Data Agent"))
@@ -260,10 +263,36 @@ class Orchestrator:
         emit("data_agent", "done",
              str(primary.get("row_count", 0)))
 
-        # ── Step 4: Cat E/F → data only (Phase 5–6 not built yet) ─
-        if category in ("E", "F"):
+        # ── Step 4: Cat F → data only (Phase 6 not built yet) ────
+        if category == "F":
             emit("orchestrator", "done")
             return self._data_only_response(question, category, primary)
+
+        # ── Step 4a: Cat E → Subscriber Agent ────────────────
+        if category == "E":
+            emit("subscriber_agent", "start")
+            sub_result = self.subscriber_agent.analyse(
+                question=question,
+                primary_data=primary,
+                on_status=on_status,
+            )
+            if sub_result.get("error"):
+                return {
+                    "question": question, "category": category,
+                    "response": f"Subscriber analysis failed: {sub_result['error']}",
+                    "data":     primary.get("data"),
+                    "error":    sub_result["error"],
+                }
+            emit("orchestrator", "done")
+            return {
+                "question": question,
+                "category": category,
+                "response": sub_result["insight"],
+                "data":     primary.get("data"),
+                "sql":      primary.get("sql"),
+                "segments": sub_result.get("segments_analysed"),
+                "error":    None,
+            }
 
         # ── Step 4b: Cat D → Genre & Catalog Agent ────────────
         if category == "D":
@@ -428,6 +457,7 @@ if __name__ == "__main__":
             "B": "Bench+Analyst",
             "C": "TrendAgent",
             "D": "CatalogAgent",
+            "E": "SubscriberAgent",
         }.get(cat, "DataOnly")
         status = "[green]✅[/green]" if ok else "[red]❌[/red]"
 
@@ -442,6 +472,6 @@ if __name__ == "__main__":
     console.print(tbl)
     console.print(f"\n[bold]Result: {passed}/{len(tests)} passed[/bold]")
     if passed == len(tests):
-        console.print("[bold green]✅ Orchestrator fully operational. Phase 4 complete.[/bold green]\n")
+        console.print("[bold green]✅ Orchestrator fully operational. Phase 5 complete.[/bold green]\n")
     else:
         console.print(f"[bold yellow]⚠️  {len(tests)-passed} tests failed.[/bold yellow]\n")
