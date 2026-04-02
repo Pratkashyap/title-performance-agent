@@ -7,7 +7,7 @@
 | 1 | Data Agent + sql_tool (DuckDB query layer) | ✅ Complete | Apr 2026 |
 | 2 | Orchestrator + Performance Analyst (Cat A + B) | ✅ Complete | Apr 2026 |
 | 3 | Benchmark Agent + Trend Agent (Cat B + C) | ✅ Complete | Apr 2026 |
-| 4 | Genre & Catalog Agent (Cat D) | — | — |
+| 4 | Genre & Catalog Agent (Cat D) | ✅ Complete | Apr 2026 |
 | 5 | Subscriber Behaviour Agent (Cat E) | — | — |
 | 6 | Alert Agent (Cat F) | — | — |
 | 7 | Quality Critic integration | — | — |
@@ -15,6 +15,14 @@
 | 9 | End-to-end testing (all 5 test cases) | — | — |
 
 ---
+
+## Phase 4 — Notes
+- `agents/genre_catalog_agent.py` — Haiku; 3 dedicated fetches: genre-level aggregates, engagement gap titles (high starts/low completion), top 10 performers by starts; produces CATALOG & GENRE ANALYSIS section
+- `agents/orchestrator.py` — Cat D now routes through GenreCatalogAgent; Cat E/F remain data-only (Phase 5–6)
+- `tools/sql_tool.py` — max_tokens increased from 1024 → 2048 in `_ask_claude_for_sql` to prevent SQL truncation on complex alert queries (Cat F regression fix)
+- Engagement gap = avg_daily_starts > catalog average AND completion_rate < 50%
+- Genre health scoring: 🟢 ≥65% | 🟡 50–64% | 🔴 <50% completion rate
+- 6/6 question categories passing end-to-end
 
 ## Phase 3 — Notes
 - `agents/benchmark_agent.py` — Haiku; fetches genre benchmarks + peer group (same-genre titles last 30d); computes ±% deltas vs genre avg; produces PEER GROUP COMPARISON section

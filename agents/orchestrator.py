@@ -5,11 +5,12 @@ WBD APAC — Title Performance Analyst
 Central routing agent. Receives all user questions, classifies into A/B/C/D/E/F,
 routes to the correct specialist agents, and synthesises the final answer.
 
-Phase 3 routes:
+Phase 4 routes:
   Cat A → Data Agent (x2) → Performance Analyst
   Cat B → Data Agent (x1) → BenchmarkAgent + Performance Analyst → combined response
   Cat C → Data Agent (x1) → TrendAgent → trend report
-  Cat D/E/F → Data Agent (x1) → data_only formatted table (Phase 4+ agents not built yet)
+  Cat D → Data Agent (x1) → GenreCatalogAgent → catalog + genre health report
+  Cat E/F → Data Agent (x1) → data_only formatted table (Phase 5–6 agents not built yet)
 
 Model: Claude Haiku 4.5 (fast classification)
 """
@@ -22,10 +23,11 @@ import anthropic
 from dotenv import load_dotenv
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-from agents.data_agent          import DataAgent
-from agents.performance_analyst import PerformanceAnalyst
-from agents.benchmark_agent     import BenchmarkAgent
-from agents.trend_agent         import TrendAgent
+from agents.data_agent            import DataAgent
+from agents.performance_analyst   import PerformanceAnalyst
+from agents.benchmark_agent       import BenchmarkAgent
+from agents.trend_agent           import TrendAgent
+from agents.genre_catalog_agent   import GenreCatalogAgent
 
 _env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../.env")
 load_dotenv(_env_path, override=True)
@@ -76,12 +78,13 @@ When in doubt, default to category B, needs_analysis=true."""
 
 class Orchestrator:
     def __init__(self):
-        self.client              = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-        self.model               = "claude-haiku-4-5-20251001"
-        self.data_agent          = DataAgent()
-        self.performance_analyst = PerformanceAnalyst()
-        self.benchmark_agent     = BenchmarkAgent()
-        self.trend_agent         = TrendAgent()
+        self.client               = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+        self.model                = "claude-haiku-4-5-20251001"
+        self.data_agent           = DataAgent()
+        self.performance_analyst  = PerformanceAnalyst()
+        self.benchmark_agent      = BenchmarkAgent()
+        self.trend_agent          = TrendAgent()
+        self.genre_catalog_agent  = GenreCatalogAgent()
 
     # ── Classification ────────────────────────────────────────
 
@@ -235,7 +238,7 @@ class Orchestrator:
             "A": "Cat A — Diagnosis  → Data Agent (x2) → Performance Analyst",
             "B": "Cat B — Snapshot   → Data Agent (x1) → Benchmark Agent + Performance Analyst",
             "C": "Cat C — Trends     → Data Agent (x2) → Trend Agent",
-            "D": "Cat D — Genre/Cat  → Data Agent (data only — Phase 4)",
+            "D": "Cat D — Genre/Cat  → Data Agent (x1) → Genre & Catalog Agent",
             "E": "Cat E — Subscriber → Data Agent (data only — Phase 5)",
             "F": "Cat F — Alerts     → Data Agent (data only — Phase 6)",
         }
@@ -257,10 +260,36 @@ class Orchestrator:
         emit("data_agent", "done",
              str(primary.get("row_count", 0)))
 
-        # ── Step 4: Cat D/E/F → data only (Phase 4–6 not built) ─
-        if category in ("D", "E", "F"):
+        # ── Step 4: Cat E/F → data only (Phase 5–6 not built yet) ─
+        if category in ("E", "F"):
             emit("orchestrator", "done")
             return self._data_only_response(question, category, primary)
+
+        # ── Step 4b: Cat D → Genre & Catalog Agent ────────────
+        if category == "D":
+            emit("genre_catalog_agent", "start")
+            catalog_result = self.genre_catalog_agent.analyse(
+                question=question,
+                primary_data=primary,
+                on_status=on_status,
+            )
+            if catalog_result.get("error"):
+                return {
+                    "question": question, "category": category,
+                    "response": f"Catalog analysis failed: {catalog_result['error']}",
+                    "data":     primary.get("data"),
+                    "error":    catalog_result["error"],
+                }
+            emit("orchestrator", "done")
+            return {
+                "question": question,
+                "category": category,
+                "response": catalog_result["insight"],
+                "data":     primary.get("data"),
+                "sql":      primary.get("sql"),
+                "genres":   catalog_result.get("genres_analysed"),
+                "error":    None,
+            }
 
         # ── Step 5: Cat C → Trend Agent ──────────────────────
         if category == "C":
@@ -398,6 +427,7 @@ if __name__ == "__main__":
             "A": "PerfAnalyst",
             "B": "Bench+Analyst",
             "C": "TrendAgent",
+            "D": "CatalogAgent",
         }.get(cat, "DataOnly")
         status = "[green]✅[/green]" if ok else "[red]❌[/red]"
 
@@ -412,6 +442,6 @@ if __name__ == "__main__":
     console.print(tbl)
     console.print(f"\n[bold]Result: {passed}/{len(tests)} passed[/bold]")
     if passed == len(tests):
-        console.print("[bold green]✅ Orchestrator fully operational. Phase 3 complete.[/bold green]\n")
+        console.print("[bold green]✅ Orchestrator fully operational. Phase 4 complete.[/bold green]\n")
     else:
         console.print(f"[bold yellow]⚠️  {len(tests)-passed} tests failed.[/bold yellow]\n")

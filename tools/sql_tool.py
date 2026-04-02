@@ -157,7 +157,7 @@ def _ask_claude_for_sql(question: str) -> str:
     client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
     response = client.messages.create(
         model="claude-haiku-4-5-20251001",
-        max_tokens=1024,
+        max_tokens=2048,
         system=SCHEMA_CONTEXT,
         messages=[{
             "role": "user",
