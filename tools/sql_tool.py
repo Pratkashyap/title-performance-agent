@@ -139,6 +139,10 @@ SQL RULES — ALWAYS FOLLOW THESE
   BAD:  CAST(date AS DATE) + INTERVAL '1 week'
   GOOD: date >= '2026-03-24'
 - NEVER use CURRENT_DATE — always use literal date strings
+- GROUP BY rule: EVERY non-aggregated column in SELECT must be in GROUP BY
+  BAD:  SELECT t.title_name, t.genre, SUM(v.starts) FROM ... GROUP BY t.title_name
+  GOOD: SELECT t.title_name, t.genre, SUM(v.starts) FROM ... GROUP BY t.title_name, t.genre
+- When in doubt about GROUP BY, use ANY_VALUE(col) for non-aggregated columns you don't want to group by
 """
 
 
