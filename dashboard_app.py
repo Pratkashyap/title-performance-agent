@@ -708,164 +708,182 @@ with tab6:
     _sys.path.insert(0, os.path.dirname(__file__))
     from agents.dashboard_agent import DashboardAgent, SUGGESTED_QUESTIONS, CATEGORY_META
 
-    # ── Load agent once per session ────────────────────────────
     @st.cache_resource
     def get_agent():
         return DashboardAgent()
 
     agent = get_agent()
 
-    # ── Session state ──────────────────────────────────────────
-    if "ai_history" not in st.session_state:
-        st.session_state.ai_history = []   # list of result dicts
-    if "ai_running" not in st.session_state:
-        st.session_state.ai_running = False
+    if "ai_history"  not in st.session_state: st.session_state.ai_history  = []
+    if "ai_question" not in st.session_state: st.session_state.ai_question = ""
 
-    # ── Layout ─────────────────────────────────────────────────
-    col_q, col_hist = st.columns([3, 2])
+    AGENT_ICONS = {
+        "orchestrator":        ("🧠", "Orchestrator",        "Classifying question & routing"),
+        "data_agent":          ("📊", "Data Agent",          "Generating SQL → querying DuckDB"),
+        "performance_analyst": ("🔍", "Performance Analyst", "Diagnosing title performance"),
+        "benchmark_agent":     ("📐", "Benchmark Agent",     "Comparing vs peer group"),
+        "trend_agent":         ("📈", "Trend Agent",         "Analysing WoW momentum"),
+        "genre_catalog_agent": ("🎭", "Genre & Catalog Agent","Scoring genre health"),
+        "subscriber_agent":    ("👤", "Subscriber Agent",    "Linking viewing to churn signals"),
+        "alert_agent":         ("🚨", "Alert Agent",         "Scanning for urgent issues"),
+        "critic_agent":        ("⚖️", "Quality Critic",      "Scoring output 0–10"),
+    }
 
-    with col_q:
-        st.markdown('<div class="sec">Ask a question about title performance</div>',
-                    unsafe_allow_html=True)
+    ALL_SAMPLES = [
+        ("A", "🔍", "#DC2626", "Why is Euphoria S2 underperforming in Southeast Asia?"),
+        ("A", "🔍", "#DC2626", "Why did viewership drop after episode 3 for The Idol?"),
+        ("B", "📊", "#4f46e5", "How is House of the Dragon S2 performing vs comparable fantasy titles?"),
+        ("B", "📊", "#4f46e5", "Compare The Last of Us S2 vs genre benchmarks across all APAC markets"),
+        ("C", "📈", "#0ea5e9", "Is The Last of Us S2 gaining or losing momentum week over week?"),
+        ("C", "📈", "#0ea5e9", "Which markets are growing fastest for House of the Dragon this month?"),
+        ("D", "🎭", "#7c3aed", "Which titles have high starts but low completions right now?"),
+        ("D", "🎭", "#7c3aed", "Give me a full genre health report for APAC this month"),
+        ("E", "👤", "#16a34a", "Does watching House of the Dragon reduce churn risk for subscribers?"),
+        ("E", "👤", "#16a34a", "What subscriber segments watch The White Lotus the most?"),
+        ("F", "🚨", "#d97706", "Which titles need immediate attention this week?"),
+        ("F", "🚨", "#d97706", "Give me the full weekly alert bulletin for APAC"),
+    ]
 
-        question_input = st.text_area(
-            label="question",
-            label_visibility="collapsed",
-            placeholder=(
-                "e.g. Why is The White Lotus S3 underperforming in Southeast Asia?\n"
-                "e.g. Which titles need immediate attention this week?"
-            ),
-            height=100,
-            key="ai_question_input",
+    # ── Layout: left samples | right query+response ────────────
+    left_col, right_col = st.columns([1, 2], gap="large")
+
+    # ══ LEFT — Sample queries ══════════════════════════════════
+    with left_col:
+        st.markdown(
+            "<div style='font-size:13px;font-weight:700;color:#0F172A;"
+            "border-left:3px solid #4f46e5;padding-left:8px;margin-bottom:14px;'>"
+            "Sample Questions</div>",
+            unsafe_allow_html=True,
         )
 
-        btn_col, tip_col = st.columns([1, 3])
-        with btn_col:
-            ask_clicked = st.button("▶ Ask", use_container_width=True,
-                                    disabled=st.session_state.ai_running)
-        with tip_col:
+        cat_groups = {}
+        for cat, icon, color, q in ALL_SAMPLES:
+            cat_groups.setdefault(cat, []).append((icon, color, q))
+
+        cat_labels_map = {"A": "Diagnosis", "B": "Snapshot", "C": "Trend",
+                          "D": "Genre & Catalog", "E": "Subscriber", "F": "Alerts"}
+
+        for cat, samples in cat_groups.items():
+            icon0, color0, _ = samples[0]
             st.markdown(
-                "<div style='font-size:11px;color:#94a3b8;padding-top:10px;'>"
-                "Routes through all 9 agents + Quality Critic. ~10–20s per query.</div>",
+                f"<div style='font-size:10px;font-weight:700;letter-spacing:.6px;"
+                f"text-transform:uppercase;color:{color0};margin:10px 0 4px;'>"
+                f"{icon0} Cat {cat} — {cat_labels_map.get(cat,'')}</div>",
                 unsafe_allow_html=True,
             )
+            for icon, color, q in samples:
+                label = q[:52] + "…" if len(q) > 52 else q
+                if st.button(label, key=f"sample_{cat}_{q[:20]}", use_container_width=True):
+                    st.session_state.ai_question = q
+                    st.rerun()
 
-        # ── Suggested questions ────────────────────────────────
-        st.markdown('<div class="sec" style="margin-top:16px;">Try a suggested question</div>',
-                    unsafe_allow_html=True)
+        st.divider()
+        st.markdown(
+            "<div style='font-size:11px;color:#94a3b8;line-height:1.6;'>"
+            "Routes through:<br>"
+            "🧠 Orchestrator<br>📊 Data Agent<br>"
+            "Specialist × 1<br>⚖️ Quality Critic<br><br>"
+            "~30–75s per query</div>",
+            unsafe_allow_html=True,
+        )
 
-        for cat, q in SUGGESTED_QUESTIONS:
-            meta = CATEGORY_META.get(cat, {})
-            icon  = meta.get("icon", "❓")
-            color = meta.get("color", "#64748b")
-            label = meta.get("label", cat)
-            if st.button(
-                f"{icon} Cat {cat} · {label} — {q[:55]}{'…' if len(q) > 55 else ''}",
-                key=f"suggest_{cat}",
-                use_container_width=True,
-            ):
-                question_input = q
-                ask_clicked = True
+    # ══ RIGHT — Question input + pipeline + response ═══════════
+    with right_col:
+        st.markdown(
+            "<div style='font-size:13px;font-weight:700;color:#0F172A;"
+            "border-left:3px solid #4f46e5;padding-left:8px;margin-bottom:14px;'>"
+            "Ask the AI Analyst</div>",
+            unsafe_allow_html=True,
+        )
 
-        # ── Run query ──────────────────────────────────────────
-        if ask_clicked and question_input.strip():
-            st.session_state.ai_running = True
-            with st.spinner("Running agent pipeline…"):
-                result = agent.run_query(question_input.strip())
+        question = st.text_area(
+            label="question",
+            label_visibility="collapsed",
+            value=st.session_state.ai_question,
+            placeholder=(
+                "Type any question about title performance…\n"
+                "e.g. Why is The White Lotus S3 underperforming in Southeast Asia?"
+            ),
+            height=90,
+            key="ai_textarea",
+        )
+
+        ask_col, clear_col = st.columns([1, 1])
+        with ask_col:
+            ask_btn = st.button("▶  Ask AI", use_container_width=True, type="primary")
+        with clear_col:
+            if st.button("✕  Clear history", use_container_width=True):
+                st.session_state.ai_history = []
+                st.session_state.ai_question = ""
+                st.rerun()
+
+        # ── Run pipeline ───────────────────────────────────────
+        if ask_btn and question.strip():
+            st.session_state.ai_question = ""
+
+            with st.spinner("Running agent pipeline — this takes 30–75 seconds…"):
+                result = agent.run_query(question.strip())
+
             st.session_state.ai_history.insert(0, result)
-            if len(st.session_state.ai_history) > 10:
-                st.session_state.ai_history = st.session_state.ai_history[:10]
-            st.session_state.ai_running = False
+            if len(st.session_state.ai_history) > 8:
+                st.session_state.ai_history = st.session_state.ai_history[:8]
+            st.rerun()
 
-        # ── Display latest result ──────────────────────────────
+        # ── Display results ────────────────────────────────────
         if st.session_state.ai_history:
-            latest = st.session_state.ai_history[0]
+            for idx, r in enumerate(st.session_state.ai_history):
+                cat_color = r.get("cat_color", "#64748b")
+                cat_icon  = r.get("cat_icon",  "❓")
+                cat_lbl   = r.get("cat_label", "")
+                cat_key   = r.get("category",  "?")
+                score     = r.get("score")
+                vbadge    = r.get("verdict_badge", "")
+                vlabel    = r.get("verdict_label", "")
+                elapsed   = r.get("elapsed_s", 0)
+                sc_str    = f"{score}/10" if score is not None else "—/10"
+                sc_col    = "#16a34a" if (score or 0) >= 8 else "#d97706" if (score or 0) >= 6 else "#dc2626"
 
-            st.divider()
+                border = "#c7d2fe" if idx == 0 else "#E2E8F0"
+                bg     = "#fafbff" if idx == 0 else "#ffffff"
 
-            # Meta strip
-            cat_icon  = latest.get("cat_icon", "❓")
-            cat_label = latest.get("cat_label", "")
-            cat_color = latest.get("cat_color", "#64748b")
-            vbadge    = latest.get("verdict_badge", "")
-            vscore    = latest.get("score")
-            vlabel    = latest.get("verdict_label", "")
-            elapsed   = latest.get("elapsed_s", 0)
-
-            score_str = f"{vscore}/10" if vscore is not None else "—/10"
-            st.markdown(
-                f"<div style='display:flex;gap:10px;align-items:center;margin-bottom:12px;'>"
-                f"<span style='background:{cat_color};color:#fff;border-radius:4px;"
-                f"padding:2px 10px;font-size:12px;font-weight:700;'>"
-                f"{cat_icon} Cat {latest.get('category','?')} · {cat_label}</span>"
-                f"<span style='font-size:12px;color:#64748b;'>"
-                f"{vbadge} Quality {score_str} · {vlabel} · {elapsed}s</span>"
-                f"</div>",
-                unsafe_allow_html=True,
-            )
-
-            if latest.get("error"):
-                st.error(f"Pipeline error: {latest['error']}")
-            else:
-                st.markdown(latest["response"])
-
-            # Pipeline trace (collapsed)
-            with st.expander("📡 Pipeline trace", expanded=False):
-                agents_seen = []
-                for ag, ev, detail in latest.get("pipeline", []):
-                    if ev in ("start", "done"):
-                        continue
-                    icon_map = {
-                        "orchestrator":      "🧠",
-                        "data_agent":        "📊",
-                        "performance_analyst": "🔍",
-                        "benchmark_agent":   "📐",
-                        "trend_agent":       "📈",
-                        "genre_catalog_agent": "🎭",
-                        "subscriber_agent":  "👤",
-                        "alert_agent":       "🚨",
-                        "critic_agent":      "⚖️",
-                    }
-                    ic = icon_map.get(ag, "·")
+                with st.container():
                     st.markdown(
-                        f"<div style='font-size:11px;color:#475569;font-family:monospace;"
-                        f"padding:1px 0;'>{ic} <b>{ag}</b> · {ev}"
-                        f"{(' — ' + str(detail)[:80]) if detail else ''}</div>",
+                        f"<div style='border:1px solid {border};border-radius:10px;"
+                        f"background:{bg};padding:16px 18px;margin-bottom:14px;'>",
                         unsafe_allow_html=True,
                     )
+                    # header row
+                    st.markdown(
+                        f"<div style='display:flex;align-items:center;gap:8px;"
+                        f"margin-bottom:10px;flex-wrap:wrap;'>"
+                        f"<span style='background:{cat_color};color:#fff;border-radius:4px;"
+                        f"padding:2px 10px;font-size:11px;font-weight:700;'>"
+                        f"{cat_icon} Cat {cat_key} · {cat_lbl}</span>"
+                        f"<span style='font-size:12px;color:{sc_col};font-weight:700;'>"
+                        f"{vbadge} Quality {sc_str} · {vlabel}</span>"
+                        f"<span style='font-size:11px;color:#94a3b8;margin-left:auto;'>"
+                        f"⏱ {elapsed}s</span>"
+                        f"</div>"
+                        f"<div style='font-size:12px;color:#475569;font-style:italic;"
+                        f"margin-bottom:12px;'>Q: {r.get('question','')}</div>",
+                        unsafe_allow_html=True,
+                    )
+                    if r.get("error"):
+                        st.error(f"Pipeline error: {r['error']}")
+                    else:
+                        st.markdown(r["response"])
 
-    # ── History panel ──────────────────────────────────────────
-    with col_hist:
-        st.markdown('<div class="sec">Recent queries</div>', unsafe_allow_html=True)
-
-        if not st.session_state.ai_history:
-            st.markdown(
-                "<div style='font-size:12px;color:#94a3b8;'>No queries yet. Ask something!</div>",
-                unsafe_allow_html=True,
-            )
-        else:
-            for i, r in enumerate(st.session_state.ai_history):
-                bg      = "#f8f9fc" if i > 0 else "#eef2ff"
-                border  = "#c7d2fe" if i == 0 else "#E2E8F0"
-                score   = r.get("score")
-                sc_str  = f"{score}/10" if score is not None else "—"
-                sc_col  = "#16a34a" if (score or 0) >= 8 else "#d97706" if (score or 0) >= 6 else "#dc2626"
-                preview = r.get("question", "")[:70] + ("…" if len(r.get("question","")) > 70 else "")
-                st.markdown(
-                    f"<div style='background:{bg};border:1px solid {border};"
-                    f"border-radius:8px;padding:10px 12px;margin-bottom:8px;'>"
-                    f"<div style='font-size:11px;color:#475569;font-weight:600;"
-                    f"margin-bottom:4px;'>"
-                    f"{r.get('cat_icon','❓')} Cat {r.get('category','?')} · {r.get('cat_label','')}"
-                    f"</div>"
-                    f"<div style='font-size:12px;color:#0f172a;margin-bottom:6px;'>{preview}</div>"
-                    f"<div style='font-size:11px;color:{sc_col};font-weight:700;'>"
-                    f"{r.get('verdict_badge','')} Quality {sc_str} · {r.get('elapsed_s',0)}s</div>"
-                    f"</div>",
-                    unsafe_allow_html=True,
-                )
-
-        if st.session_state.ai_history:
-            if st.button("🗑 Clear history", key="clear_history"):
-                st.session_state.ai_history = []
-                st.rerun()
+                    # pipeline trace
+                    with st.expander("📡 Agent pipeline trace", expanded=(idx == 0)):
+                        for ag, ev, detail in r.get("pipeline", []):
+                            if ev in ("start", "done"):
+                                continue
+                            ic, lbl, _ = AGENT_ICONS.get(ag, ("·", ag, ""))
+                            st.markdown(
+                                f"<div style='font-size:11px;color:#64748b;"
+                                f"font-family:monospace;padding:1px 0;'>"
+                                f"{ic} <b>{lbl}</b> · {ev}"
+                                f"{(' — ' + str(detail)[:70]) if detail else ''}</div>",
+                                unsafe_allow_html=True,
+                            )
+                    st.markdown("</div>", unsafe_allow_html=True)
