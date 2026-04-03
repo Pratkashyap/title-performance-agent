@@ -287,8 +287,8 @@ The simulated dataset includes:
 ✅  Phase 4 — Genre & Catalog Agent (Category D)
 ✅  Phase 5 — Subscriber Behaviour Agent (Category E)
 ✅  Phase 6 — Alert Agent (Category F)
-🔨  Phase 7 — Quality Critic integration
-⬜  Phase 8 — Dashboard Agent (Streamlit)
+✅  Phase 7 — Quality Critic integration (gates all 6 categories)
+🔨  Phase 8 — Dashboard Agent (Streamlit)
 ⬜  Phase 8 — Dashboard Agent (Streamlit)
 ⬜  Phase 9 — End-to-end testing
 ```

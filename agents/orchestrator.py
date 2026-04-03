@@ -5,13 +5,13 @@ WBD APAC — Title Performance Analyst
 Central routing agent. Receives all user questions, classifies into A/B/C/D/E/F,
 routes to the correct specialist agents, and synthesises the final answer.
 
-Phase 6 routes:
-  Cat A → Data Agent (x2) → Performance Analyst
-  Cat B → Data Agent (x1) → BenchmarkAgent + Performance Analyst → combined response
-  Cat C → Data Agent (x1) → TrendAgent → trend report
-  Cat D → Data Agent (x1) → GenreCatalogAgent → catalog + genre health report
-  Cat E → Data Agent (x1) → SubscriberAgent → subscriber behaviour report
-  Cat F → Data Agent (x1) → AlertAgent → prioritised alert bulletin
+Phase 7 routes (all categories now gated by Quality Critic):
+  Cat A → Data Agent (x2) → Performance Analyst       → Quality Critic
+  Cat B → Data Agent (x1) → BenchmarkAgent + Analyst  → Quality Critic
+  Cat C → Data Agent (x1) → TrendAgent                → Quality Critic
+  Cat D → Data Agent (x1) → GenreCatalogAgent         → Quality Critic
+  Cat E → Data Agent (x1) → SubscriberAgent           → Quality Critic
+  Cat F → Data Agent (x1) → AlertAgent                → Quality Critic
 
 Model: Claude Haiku 4.5 (fast classification)
 """
@@ -31,6 +31,7 @@ from agents.trend_agent           import TrendAgent
 from agents.genre_catalog_agent   import GenreCatalogAgent
 from agents.subscriber_agent      import SubscriberAgent
 from agents.alert_agent           import AlertAgent
+from agents.critic_agent          import CriticAgent
 
 _env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../.env")
 load_dotenv(_env_path, override=True)
@@ -90,6 +91,7 @@ class Orchestrator:
         self.genre_catalog_agent  = GenreCatalogAgent()
         self.subscriber_agent     = SubscriberAgent()
         self.alert_agent          = AlertAgent()
+        self.critic_agent         = CriticAgent()
 
     # ── Classification ────────────────────────────────────────
 
@@ -189,6 +191,20 @@ class Orchestrator:
             "error":    None,
         }
 
+    # ── Quality gate ──────────────────────────────────────────
+
+    def _gate(self, response: str, question: str, category: str, on_status) -> str:
+        """Run the Quality Critic and return the (possibly improved) response."""
+        critic_result = self.critic_agent.review(
+            insight=response,
+            question=question,
+            category=category,
+            on_status=on_status,
+        )
+        if critic_result.get("error") or not critic_result.get("reviewed_insight"):
+            return response  # critic failure → deliver original unchanged
+        return critic_result["reviewed_insight"]
+
     # ── Main entry point ──────────────────────────────────────
 
     def run(self, question: str, on_status=None) -> dict:
@@ -280,11 +296,12 @@ class Orchestrator:
                     "data":     primary.get("data"),
                     "error":    alert_result["error"],
                 }
+            final = self._gate(alert_result["insight"], question, category, on_status)
             emit("orchestrator", "done")
             return {
                 "question": question,
                 "category": category,
-                "response": alert_result["insight"],
+                "response": final,
                 "data":     primary.get("data"),
                 "sql":      primary.get("sql"),
                 "alerts":   alert_result.get("alerts_found"),
@@ -306,11 +323,12 @@ class Orchestrator:
                     "data":     primary.get("data"),
                     "error":    sub_result["error"],
                 }
+            final = self._gate(sub_result["insight"], question, category, on_status)
             emit("orchestrator", "done")
             return {
                 "question": question,
                 "category": category,
-                "response": sub_result["insight"],
+                "response": final,
                 "data":     primary.get("data"),
                 "sql":      primary.get("sql"),
                 "segments": sub_result.get("segments_analysed"),
@@ -332,11 +350,12 @@ class Orchestrator:
                     "data":     primary.get("data"),
                     "error":    catalog_result["error"],
                 }
+            final = self._gate(catalog_result["insight"], question, category, on_status)
             emit("orchestrator", "done")
             return {
                 "question": question,
                 "category": category,
-                "response": catalog_result["insight"],
+                "response": final,
                 "data":     primary.get("data"),
                 "sql":      primary.get("sql"),
                 "genres":   catalog_result.get("genres_analysed"),
@@ -358,11 +377,12 @@ class Orchestrator:
                     "data":     primary.get("data"),
                     "error":    trend_result["error"],
                 }
+            final = self._gate(trend_result["insight"], question, category, on_status)
             emit("orchestrator", "done")
             return {
                 "question": question,
                 "category": category,
-                "response": trend_result["insight"],
+                "response": final,
                 "data":     primary.get("data"),
                 "sql":      primary.get("sql"),
                 "trend":    trend_result.get("trend_direction"),
@@ -422,6 +442,7 @@ class Orchestrator:
                     + bench_result["insight"]
                 )
 
+        final_response = self._gate(final_response, question, category, on_status)
         emit("orchestrator", "done")
 
         return {
@@ -496,6 +517,6 @@ if __name__ == "__main__":
     console.print(tbl)
     console.print(f"\n[bold]Result: {passed}/{len(tests)} passed[/bold]")
     if passed == len(tests):
-        console.print("[bold green]✅ Orchestrator fully operational. Phase 6 complete.[/bold green]\n")
+        console.print("[bold green]✅ Orchestrator fully operational. Phase 7 complete.[/bold green]\n")
     else:
         console.print(f"[bold yellow]⚠️  {len(tests)-passed} tests failed.[/bold yellow]\n")

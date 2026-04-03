@@ -10,11 +10,20 @@
 | 4 | Genre & Catalog Agent (Cat D) | ✅ Complete | Apr 2026 |
 | 5 | Subscriber Behaviour Agent (Cat E) | ✅ Complete | Apr 2026 |
 | 6 | Alert Agent (Cat F) | ✅ Complete | Apr 2026 |
-| 7 | Quality Critic integration | — | — |
+| 7 | Quality Critic integration | ✅ Complete | Apr 2026 |
 | 8 | Dashboard Agent (Streamlit) | — | — |
 | 9 | End-to-end testing (all 5 test cases) | — | — |
 
 ---
+
+## Phase 7 — Notes
+- `agents/critic_agent.py` — Haiku; scores every response 0–10 across 5 dimensions: Specificity, Actionability, Accuracy, Completeness, Tone (0–2 pts each)
+- `agents/orchestrator.py` — `_gate()` helper added; called after every specialist return path (A–F); critic failure falls back to original response silently
+- Verdict thresholds: ✅ Approved ≥8 | ⚡ Enhanced 6–7 | 🔧 Revised <6
+- Enhancement/revision capped at 80 words — critic improves, never replaces
+- Critic self-test: 9/10 on high-quality synthetic, 4/10 on vague, 1/10 on hedge-heavy — all correctly gated
+- Orchestrator 6/6 end-to-end passing with critic in pipeline
+- Cat C (Trend) and Cat E (Subscriber) consistently score ≥8; Cat A/B/D/F tend toward 5 and get revised — expected given simulated data sparsity
 
 ## Phase 6 — Notes
 - `agents/alert_agent.py` — Haiku; 3 dedicated scans: WoW drop scan (titles with >10% WoW starts decline), low completion scan (completion <50%, starts >100 in last 7d), new launch scan (titles released in last 30d vs genre day-7 benchmark)
