@@ -211,8 +211,9 @@ GRID_COLOR = "#E2E8F0"
 # ─────────────────────────────────────────────────────────────
 # SESSION STATE
 # ─────────────────────────────────────────────────────────────
-if "ai_history" not in st.session_state: st.session_state.ai_history = []
-if "ai_input"   not in st.session_state: st.session_state.ai_input   = ""
+if "ai_history"  not in st.session_state: st.session_state.ai_history  = []
+if "ai_prefill"  not in st.session_state: st.session_state.ai_prefill  = ""
+if "ai_inp_key"  not in st.session_state: st.session_state.ai_inp_key  = 0
 
 
 # ─────────────────────────────────────────────────────────────
@@ -298,7 +299,8 @@ with st.sidebar:
         for icon, color, q in samples:
             label = q[:46] + "…" if len(q) > 46 else q
             if st.button(label, key=f"sq_{cat}_{q[:18]}", use_container_width=True):
-                st.session_state.ai_input = q
+                st.session_state.ai_prefill = q
+                st.session_state.ai_inp_key += 1
                 st.rerun()
 
     st.markdown("<div style='margin:14px 0;border-top:1px solid #2d3048;'></div>",
@@ -454,8 +456,9 @@ with tab_ai:
         question = st.text_input(
             label="question",
             label_visibility="collapsed",
+            value=st.session_state.ai_prefill,
             placeholder="Type your question here, or pick a topic from the sidebar…",
-            key="ai_input",
+            key=f"ai_input_{st.session_state.ai_inp_key}",
         )
 
         btn_col, clr_col = st.columns([2, 1])
@@ -469,12 +472,14 @@ with tab_ai:
         with clr_col:
             if st.button("✕  Clear", use_container_width=True, key="clr_btn"):
                 st.session_state.ai_history = []
-                st.session_state.ai_input   = ""
+                st.session_state.ai_prefill = ""
+                st.session_state.ai_inp_key += 1
                 st.rerun()
 
         # ── Run pipeline ───────────────────────────────────────
         if ask_btn and question.strip():
-            st.session_state.ai_input = ""
+            st.session_state.ai_prefill = ""
+            st.session_state.ai_inp_key += 1
             with st.spinner("Routing to agents — 30–75 seconds…"):
                 result = agent.run_query(question.strip())
             st.session_state.ai_history.insert(0, result)
