@@ -632,7 +632,7 @@ with tab5:
                          * 100.0 / NULLIF(COUNT(DISTINCT sv.subscriber_id),0), 1)           AS churn_pct
             FROM subscriber_viewing sv
             JOIN titles t ON t.title_id = sv.title_id
-            WHERE {gen_sql.replace('v.', 'sv.')} {fmt_sql.replace('t.', 't.')}
+            WHERE 1=1 {gen_sql.replace('v.', 'sv.')} {fmt_sql}
             GROUP BY sv.subscriber_segment
             ORDER BY churn_pct DESC
         """)
