@@ -11,10 +11,17 @@
 | 5 | Subscriber Behaviour Agent (Cat E) | ✅ Complete | Apr 2026 |
 | 6 | Alert Agent (Cat F) | ✅ Complete | Apr 2026 |
 | 7 | Quality Critic integration | ✅ Complete | Apr 2026 |
-| 8 | Dashboard Agent (Streamlit) | — | — |
+| 8 | Dashboard Agent (Streamlit) | ✅ Complete | Apr 2026 |
 | 9 | End-to-end testing (all 5 test cases) | — | — |
 
 ---
+
+## Phase 8 — Notes
+- `agents/dashboard_agent.py` — Streamlit integration wrapper; thin bridge over Orchestrator; collects pipeline events via on_status callback; extracts quality score/verdict from critic badge on first line; exposes SUGGESTED_QUESTIONS + CATEGORY_META for UI
+- `dashboard_app.py` — Added 6th tab "🤖 Ask AI"; uses st.cache_resource to keep DashboardAgent alive across reruns; query input + 6 suggested question buttons; live result display with cat/quality meta strip; collapsible pipeline trace; history panel (last 10 queries) with score colour coding; "Clear history" button
+- Sidebar footer updated from "Phase 1 Preview" to "Phase 8 · Full AI Pipeline"
+- Imports verified: syntax OK, DashboardAgent init OK
+- Run: `streamlit run dashboard_app.py` from repo root
 
 ## Phase 7 — Notes
 - `agents/critic_agent.py` — Haiku; scores every response 0–10 across 5 dimensions: Specificity, Actionability, Accuracy, Completeness, Tone (0–2 pts each)

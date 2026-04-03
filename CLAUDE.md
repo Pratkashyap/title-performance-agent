@@ -32,8 +32,8 @@ With: Natural language question → structured answer (< 15 seconds)
 | 5 | Subscriber Behaviour Agent (Cat E) | ✅ Complete |
 | 6 | Alert Agent (Cat F) | ✅ Complete |
 | 7 | Quality Critic | ✅ Complete |
-| 8 | Dashboard Agent (Streamlit) | ⬜ Next |
-| 9 | End-to-end testing | ⬜ |
+| 8 | Dashboard Agent (Streamlit) | ✅ Complete |
+| 9 | End-to-end testing | ⬜ Next |
 
 **Build approach:** Phase-by-phase (Option B) — complete and test each phase before moving on.
 
@@ -203,4 +203,4 @@ All projects share this same architecture and DuckDB foundation.
 - Subscriber data is session-level, not event-level
 
 ---
-*Last updated: April 2026 | Current phase: Phase 7 complete → Phase 8 next (Dashboard Agent — Streamlit)*
+*Last updated: April 2026 | Current phase: Phase 8 complete → Phase 9 next (End-to-end testing)*
