@@ -12,9 +12,16 @@
 | 6 | Alert Agent (Cat F) | ✅ Complete | Apr 2026 |
 | 7 | Quality Critic integration | ✅ Complete | Apr 2026 |
 | 8 | Dashboard Agent (Streamlit) | ✅ Complete | Apr 2026 |
-| 9 | End-to-end testing (all 5 test cases) | — | — |
+| 9 | End-to-end testing (all 5 test cases) | ✅ Complete | Apr 2026 |
 
 ---
+
+## Phase 9 — Notes
+- `tests/test_e2e.py` — 5 canonical test cases, one per key category (A, B, C, E, F); 5 pass criteria per test: no error, correct category, response ≥ 150 chars, quality score extracted, elapsed ≤ 90s
+- All 5/5 tests passed: Cat A (9/10 Approved, 72.3s), Cat B (9/10 Approved, 49.1s), Cat C (8/10 Approved, 31.3s), Cat E (8/10 Approved, 35.5s), Cat F (8/10 Approved, 37.2s)
+- All tests scored ≥ 8 — Quality Critic approving all outputs without enhancement or revision
+- Full pipeline confirmed: Orchestrator → Data Agent → Specialist → Critic → structured response
+- V1 complete — all 9 phases done, 9 agents active, Streamlit dashboard live
 
 ## Phase 8 — Notes
 - `agents/dashboard_agent.py` — Streamlit integration wrapper; thin bridge over Orchestrator; collects pipeline events via on_status callback; extracts quality score/verdict from critic badge on first line; exposes SUGGESTED_QUESTIONS + CATEGORY_META for UI

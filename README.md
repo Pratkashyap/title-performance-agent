@@ -289,7 +289,7 @@ The simulated dataset includes:
 ✅  Phase 6 — Alert Agent (Category F)
 ✅  Phase 7 — Quality Critic integration (gates all 6 categories)
 ✅  Phase 8 — Dashboard Agent (Streamlit AI Q&A tab)
-🔨  Phase 9 — End-to-end testing
+✅  Phase 9 — End-to-end testing (5/5 canonical tests passing, scores 8–9/10)
 ```
 
 ---
@@ -297,11 +297,9 @@ The simulated dataset includes:
 ## Roadmap
 
 ```
-✅  V1 — Data layer + core agents (in progress)
-🔨  V2 — Full 9-agent pipeline live, terminal UI complete
-🔨  V3 — Streamlit dashboard with live query support
-🔨  V4 — Production hardening, real data connector
-🔨  V5 — Second analytics use case (same architecture, new domain)
+✅  V1 — Full 9-agent pipeline complete (all phases 0–9 done)
+🔨  V2 — Production hardening, real data connector
+🔨  V3 — Second analytics use case (same architecture, new domain)
 ```
 
 This project is part of a wider series building 10 AI analytics agents on the same architecture. Each one adds a new domain while reusing the same orchestration pattern, data layer, and quality critic.
