@@ -1,10 +1,22 @@
+# Secrets — never commit
 .env
+
+# Python
 venv/
 __pycache__/
 *.pyc
 *.pyo
+
+# OS
 .DS_Store
+
+# DuckDB — generated locally by setup.sh via data/generate_data.py
+# Do NOT commit the binary. Run `bash setup.sh` on a new machine to regenerate.
 *.duckdb
 *.duckdb.wal
+
+# Streamlit
 .streamlit/secrets.toml
+
+# Generated files
 generated_dashboard_*.py

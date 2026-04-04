@@ -7,6 +7,31 @@
 
 ---
 
+## ⚡ Quick Start — Run on Any Machine
+
+```bash
+# 1. Clone
+git clone https://github.com/Pratkashyap/title-performance-agent.git
+cd title-performance-agent
+
+# 2. One-command setup (creates venv, installs deps, generates DB)
+bash setup.sh
+
+# 3. Add your Anthropic API key to .env
+#    ANTHROPIC_API_KEY="sk-ant-..."
+#    Get one at: https://console.anthropic.com
+
+# 4. Launch
+bash run.sh
+```
+
+**Then open: http://localhost:8501**
+
+> **Requirements:** Python 3.10+ · Anthropic API key (free tier works)
+> No Docker, no cloud, no paid services beyond the API.
+
+---
+
 ## What This Is
 
 A multi-agent AI analytics platform that answers any natural language question about how a title is performing — diagnosis, benchmarking, trend analysis, genre health, subscriber behaviour, and proactive alerts.
