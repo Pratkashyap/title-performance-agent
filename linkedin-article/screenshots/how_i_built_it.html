@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #f0f2f8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 32px 0 40px;
+  }
+  h1 {
+    font-size: 34px; font-weight: 800; color: #1a1a1a;
+    text-align: center; margin-bottom: 6px; line-height: 1.2; width: 960px;
+  }
+  h1 span { color: #4f46e5; }
+  .sub { font-size: 13px; color: #64748B; text-align: center; margin-bottom: 28px; }
+
+  .diagram { position: relative; width: 960px; height: 750px; }
+
+  .diagram svg {
+    position: absolute; top: 0; left: 0;
+    width: 960px; height: 750px;
+    z-index: 0; pointer-events: none;
+  }
+
+  .box {
+    position: absolute; width: 286px; height: 158px;
+    background: #fff; border-radius: 12px;
+    border: 1.5px solid #e2e8f0; padding: 14px 13px;
+    z-index: 1; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .box.highlight {
+    border: 2.5px solid #4f46e5; background: #fafbff;
+  }
+
+  .team-box {
+    position: absolute; left: 0; top: 580px;
+    width: 960px; height: 120px;
+    background: #eef2ff; border: 2px solid #4f46e5;
+    border-radius: 12px; padding: 14px 20px;
+    z-index: 1; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  .box-header { display: flex; align-items: center; gap: 7px; margin-bottom: 10px; }
+  .box-num {
+    font-size: 9.5px; font-weight: 700;
+    background: #f0ece6; color: #888;
+    border-radius: 4px; padding: 2px 6px;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .box.highlight .box-num { background: #e0e7ff; color: #4f46e5; }
+  .box-title { font-size: 12px; font-weight: 700; color: #1a1a1a; line-height: 1.2; }
+
+  .items { display: flex; flex-wrap: wrap; gap: 4px; }
+  .item { display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; min-width: 52px; }
+  .icon { font-size: 17px; line-height: 1; }
+  .label { font-size: 9px; color: #555; text-align: center; line-height: 1.25; font-weight: 500; }
+
+  .team-items { display: flex; justify-content: space-between; gap: 6px; }
+  .team-items .item { flex: 1; }
+
+  .badge { margin-top: 22px; text-align: center; }
+  .badge span {
+    display: inline-block; background: #1e2130; color: #fff;
+    font-size: 12px; font-weight: 700; padding: 9px 28px;
+    border-radius: 20px; letter-spacing: 1px;
+  }
+  .badge em { color: #818cf8; font-style: normal; }
+</style>
+</head>
+<body>
+
+<h1>How I Built a <span>9-Agent Streaming Analytics</span> AI Team</h1>
+<p class="sub">Title Performance Analyst · APAC · Max / HBO Max · Build AI Raw 2026</p>
+
+<div class="diagram">
+
+  <svg>
+    <defs>
+      <marker id="arr" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto" markerUnits="userSpaceOnUse">
+        <polygon points="0 0, 9 3.5, 0 7" fill="#4f46e5"/>
+      </marker>
+    </defs>
+    <!-- ROW 1: 1→2→3 -->
+    <line x1="296" y1="79" x2="340" y2="79" stroke="#4f46e5" stroke-width="2" marker-end="url(#arr)"/>
+    <line x1="626" y1="79" x2="670" y2="79" stroke="#4f46e5" stroke-width="2" marker-end="url(#arr)"/>
+    <!-- 3→4 snake -->
+    <polyline points="816,158 816,178 150,178 150,198" fill="none" stroke="#4f46e5" stroke-width="2" marker-end="url(#arr)"/>
+    <!-- ROW 2: 4→5→6 -->
+    <line x1="296" y1="277" x2="340" y2="277" stroke="#4f46e5" stroke-width="2" marker-end="url(#arr)"/>
+    <line x1="626" y1="277" x2="670" y2="277" stroke="#4f46e5" stroke-width="2" marker-end="url(#arr)"/>
+    <!-- 6→7 snake -->
+    <polyline points="816,358 816,378 150,378 150,398" fill="none" stroke="#4f46e5" stroke-width="2" marker-end="url(#arr)"/>
+    <!-- ROW 3: 7→8→9 -->
+    <line x1="296" y1="477" x2="340" y2="477" stroke="#4f46e5" stroke-width="2" marker-end="url(#arr)"/>
+    <line x1="626" y1="477" x2="670" y2="477" stroke="#4f46e5" stroke-width="2" marker-end="url(#arr)"/>
+    <!-- 8→team -->
+    <line x1="480" y1="556" x2="480" y2="578" stroke="#4f46e5" stroke-width="2" marker-end="url(#arr)"/>
+  </svg>
+
+  <!-- ROW 1 -->
+  <div class="box" style="left:10px;top:0;">
+    <div class="box-header"><span class="box-num">1.</span><span class="box-title">Define Purpose & Scope</span></div>
+    <div class="items">
+      <div class="item"><div class="icon">🎯</div><div class="label">APAC streaming Q&A</div></div>
+      <div class="item"><div class="icon">💬</div><div class="label">Plain English → insights</div></div>
+      <div class="item"><div class="icon">✅</div><div class="label">8.9/10 quality target</div></div>
+      <div class="item"><div class="icon">🌏</div><div class="label">10 APAC markets</div></div>
+    </div>
+  </div>
+
+  <div class="box" style="left:342px;top:0;">
+    <div class="box-header"><span class="box-num">2.</span><span class="box-title">System Prompt Design</span></div>
+    <div class="items">
+      <div class="item"><div class="icon">📋</div><div class="label">One role per agent</div></div>
+      <div class="item"><div class="icon">🚫</div><div class="label">Explicit prohibitions</div></div>
+      <div class="item"><div class="icon">🔀</div><div class="label">6 question categories</div></div>
+      <div class="item"><div class="icon">🛡️</div><div class="label">Quality guardrails</div></div>
+    </div>
+  </div>
+
+  <div class="box" style="left:672px;top:0;">
+    <div class="box-header"><span class="box-num">3.</span><span class="box-title">Choose LLM Strategy</span></div>
+    <div class="items">
+      <div class="item"><div class="icon">🤖</div><div class="label">Sonnet 4.6 — deep reasoning</div></div>
+      <div class="item"><div class="icon">⚡</div><div class="label">Haiku 4.5 — fast tasks</div></div>
+      <div class="item"><div class="icon">💰</div><div class="label">~$0.04/query</div></div>
+      <div class="item"><div class="icon">⏱️</div><div class="label">&lt;75s response</div></div>
+    </div>
+  </div>
+
+  <!-- ROW 2 -->
+  <div class="box" style="left:10px;top:198px;">
+    <div class="box-header"><span class="box-num">4.</span><span class="box-title">Data Layer</span></div>
+    <div class="items">
+      <div class="item"><div class="icon">🦆</div><div class="label">DuckDB local</div></div>
+      <div class="item"><div class="icon">📊</div><div class="label">5 tables · APAC data</div></div>
+      <div class="item"><div class="icon">🔒</div><div class="label">One agent, one DB</div></div>
+      <div class="item"><div class="icon">🔄</div><div class="label">NL → SQL → results</div></div>
+    </div>
+  </div>
+
+  <div class="box highlight" style="left:342px;top:198px;">
+    <div class="box-header"><span class="box-num">5.</span><span class="box-title">Orchestration Pattern</span></div>
+    <div class="items">
+      <div class="item"><div class="icon">🧠</div><div class="label">Supervisor pattern</div></div>
+      <div class="item"><div class="icon">🔀</div><div class="label">Classify → route</div></div>
+      <div class="item"><div class="icon">⚙️</div><div class="label">9 specialist agents</div></div>
+      <div class="item"><div class="icon">⭐</div><div class="label">Quality gate layer</div></div>
+    </div>
+  </div>
+
+  <div class="box" style="left:672px;top:198px;">
+    <div class="box-header"><span class="box-num">6.</span><span class="box-title">Quality Control</span></div>
+    <div class="items">
+      <div class="item"><div class="icon">⚖️</div><div class="label">Critic scores 0–10</div></div>
+      <div class="item"><div class="icon">📈</div><div class="label">6.5 → 8.9 avg quality</div></div>
+      <div class="item"><div class="icon">🔁</div><div class="label">Auto-revise on &lt;6</div></div>
+      <div class="item"><div class="icon">🎯</div><div class="label">5 scoring dimensions</div></div>
+    </div>
+  </div>
+
+  <!-- ROW 3 -->
+  <div class="box" style="left:10px;top:398px;">
+    <div class="box-header"><span class="box-num">7.</span><span class="box-title">AI-First Dashboard</span></div>
+    <div class="items">
+      <div class="item"><div class="icon">🖥️</div><div class="label">Streamlit · Agent Chat first</div></div>
+      <div class="item"><div class="icon">💬</div><div class="label">Sidebar quick queries</div></div>
+      <div class="item"><div class="icon">📡</div><div class="label">Live pipeline panel</div></div>
+      <div class="item"><div class="icon">📊</div><div class="label">5 data tabs secondary</div></div>
+    </div>
+  </div>
+
+  <div class="box" style="left:342px;top:398px;">
+    <div class="box-header"><span class="box-num">8.</span><span class="box-title">Testing & Evals</span></div>
+    <div class="items">
+      <div class="item"><div class="icon">🏆</div><div class="label">5/5 E2E tests pass</div></div>
+      <div class="item"><div class="icon">📈</div><div class="label">All score 8–9/10</div></div>
+      <div class="item"><div class="icon">🐛</div><div class="label">SQL bugs → fixed</div></div>
+      <div class="item"><div class="icon">✅</div><div class="label">Self-tests per phase</div></div>
+    </div>
+  </div>
+
+  <div class="box" style="left:672px;top:398px;">
+    <div class="box-header"><span class="box-num">9.</span><span class="box-title">Deploy & Publish</span></div>
+    <div class="items">
+      <div class="item"><div class="icon">🚀</div><div class="label">Streamlit localhost</div></div>
+      <div class="item"><div class="icon">🐙</div><div class="label">GitHub repo open</div></div>
+      <div class="item"><div class="icon">📝</div><div class="label">Phase log · docs</div></div>
+      <div class="item"><div class="icon">📣</div><div class="label">LinkedIn build series</div></div>
+    </div>
+  </div>
+
+  <!-- TEAM BOX -->
+  <div class="team-box">
+    <div class="box-header">
+      <span class="box-num" style="background:#e0e7ff;color:#4f46e5;">THE TEAM</span>
+      <span class="box-title">9 AI Agents — Each With One Bounded Role</span>
+    </div>
+    <div class="team-items">
+      <div class="item"><div class="icon">🧠</div><div class="label">Orchestrator</div></div>
+      <div class="item"><div class="icon">📊</div><div class="label">Data Agent</div></div>
+      <div class="item"><div class="icon">🔍</div><div class="label">Perf Analyst</div></div>
+      <div class="item"><div class="icon">📐</div><div class="label">Benchmark</div></div>
+      <div class="item"><div class="icon">📈</div><div class="label">Trend Agent</div></div>
+      <div class="item"><div class="icon">🎭</div><div class="label">Genre Catalog</div></div>
+      <div class="item"><div class="icon">👤</div><div class="label">Subscriber</div></div>
+      <div class="item"><div class="icon">🚨</div><div class="label">Alert Agent</div></div>
+      <div class="item"><div class="icon">⚖️</div><div class="label">Quality Critic</div></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="badge">
+  <span>🎬 <em>Title Performance Analyst</em> &nbsp;·&nbsp; Build AI Raw &nbsp;·&nbsp; Prateek · 2026</span>
+</div>
+
+</body>
+</html>

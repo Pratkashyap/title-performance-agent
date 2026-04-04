@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #111; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+.thumb {
+  width: 900px; height: 470px;
+  background: #000;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+  border: 3px solid #4f46e5;
+}
+.thumb::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(79,70,229,0.06) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(79,70,229,0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+.c { position: absolute; width: 36px; height: 36px; border-color: #4f46e5; border-style: solid; opacity: 0.7; }
+.tl { top:16px; left:16px; border-width: 3px 0 0 3px; }
+.tr { top:16px; right:16px; border-width: 3px 3px 0 0; }
+.bl { bottom:16px; left:16px; border-width: 0 0 3px 3px; }
+.br { bottom:16px; right:16px; border-width: 0 3px 3px 0; }
+.main { font-family: 'Press Start 2P', monospace; color: #4f46e5; text-align: center; position: relative; z-index: 2; }
+.l1 { font-size: 50px; text-shadow: 4px 4px 0 #1e1b72, 7px 7px 0 #0c0a33; display: block; }
+.l2 { font-size: 28px; text-shadow: 3px 3px 0 #1e1b72, 6px 6px 0 #0c0a33; display: block; margin-top: 14px; color: #818cf8; }
+.l3 { font-size: 22px; text-shadow: 2px 2px 0 #1e1b72; display: block; margin-top: 10px; color: #c7d2fe; }
+.tags { display: flex; gap: 12px; margin-top: 28px; position: relative; z-index: 2; }
+.tag { font-family: 'Press Start 2P', monospace; font-size: 9px; color: #000; background: #4f46e5; padding: 7px 14px; }
+.tag.out { background: transparent; color: #4f46e5; border: 2px solid #4f46e5; }
+.byline { position: absolute; bottom: 20px; right: 24px; font-family: 'Press Start 2P', monospace; font-size: 8px; color: rgba(79,70,229,0.4); z-index: 2; }
+.apac-badge {
+  position: absolute; top: 20px; left: 24px;
+  font-family: 'Press Start 2P', monospace; font-size: 8px;
+  color: rgba(199,210,254,0.5); z-index: 2;
+}
+</style>
+</head>
+<body>
+<div class="thumb">
+  <div class="c tl"></div><div class="c tr"></div>
+  <div class="c bl"></div><div class="c br"></div>
+  <div class="apac-badge">MAX · APAC · 10 MARKETS</div>
+  <div class="main">
+    <span class="l1">CLAUDE CODE</span>
+    <span class="l2">TITLE PERFORMANCE</span>
+    <span class="l3">9 AI AGENT ANALYST TEAM</span>
+  </div>
+  <div class="tags">
+    <div class="tag">CLAUDE API</div>
+    <div class="tag out">PYTHON</div>
+    <div class="tag">9 AGENTS</div>
+    <div class="tag out">STREAMING</div>
+    <div class="tag">APAC</div>
+  </div>
+  <div class="byline">BUILD AI RAW - PRATEEK - 2026</div>
+</div>
+</body>
+</html>
