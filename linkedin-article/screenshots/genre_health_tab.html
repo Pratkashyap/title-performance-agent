@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family:'Inter',sans-serif;
+    background:#F0F2F8;
+    min-height:100vh;
+    display:flex; flex-direction:column; align-items:center;
+    padding:24px 0 40px;
+  }
+  .app-shell {
+    width:980px;
+    background:#fff;
+    border-radius:12px;
+    border:1px solid #E2E8F0;
+    overflow:hidden;
+    box-shadow:0 4px 24px rgba(0,0,0,0.10);
+  }
+  .app-header {
+    background:#1E2130; padding:12px 20px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .app-header-title { font-size:14px; font-weight:800; color:#fff; }
+  .app-header-sub { font-size:11px; color:#64748B; margin-top:2px; }
+  .app-header-badge {
+    background:#4f46e5; color:#fff; border-radius:20px;
+    padding:4px 14px; font-size:11px; font-weight:700;
+  }
+  .tabs {
+    background:#fff; border-bottom:1px solid #E2E8F0;
+    display:flex; gap:2px; padding:8px 16px 0;
+  }
+  .tab {
+    padding:7px 16px; font-size:12px; font-weight:600;
+    color:#64748B; border-radius:5px 5px 0 0;
+    border:1px solid transparent; border-bottom:none;
+  }
+  .tab.active { background:#4f46e5; color:#fff; border-color:#4f46e5; }
+  .main { display:flex; min-height:580px; }
+  .sidebar {
+    width:220px; background:#1E2130; border-right:1px solid #2d3048;
+    padding:14px 12px; flex-shrink:0;
+  }
+  .sidebar-title { font-size:13px; font-weight:800; color:#fff; margin-bottom:2px; }
+  .sidebar-sub { font-size:10px; color:#64748B; margin-bottom:14px; }
+  .sidebar-section {
+    font-size:9px; font-weight:700; color:#64748B;
+    text-transform:uppercase; letter-spacing:.8px; margin-bottom:8px;
+  }
+  .sidebar-cat { font-size:9px; font-weight:700; margin:10px 0 4px; }
+  .sidebar-btn {
+    background:#2a2f47; border:1px solid #3d4461; border-radius:5px;
+    color:#CBD5E1; font-size:10px; padding:5px 8px; margin-bottom:3px;
+    width:100%; text-align:left; white-space:nowrap;
+    overflow:hidden; text-overflow:ellipsis; display:block;
+  }
+  .sidebar-divider { border-top:1px solid #2d3048; margin:12px 0; }
+  .sidebar-agent { font-size:10px; color:#94A3B8; padding:2px 0; }
+  .content { flex:1; background:#F8FAFC; padding:14px 16px; overflow:auto; }
+  .filter-bar {
+    background:#fff; border:1px solid #E2E8F0; border-radius:8px;
+    padding:10px 14px; margin-bottom:14px;
+    display:flex; gap:20px; align-items:center;
+  }
+  .filter-item { display:flex; flex-direction:column; gap:3px; min-width:110px; }
+  .filter-label { font-size:9px; font-weight:700; color:#64748B; text-transform:uppercase; letter-spacing:.5px; }
+  .filter-select {
+    font-size:11px; color:#0f172a; background:#F8FAFC;
+    border:1px solid #CBD5E1; border-radius:5px; padding:4px 8px;
+  }
+  .charts-row { display:flex; gap:12px; }
+  .chart-card { background:#fff; border:1px solid #E2E8F0; border-radius:10px; padding:12px 14px; }
+  .sec {
+    font-size:12px; font-weight:700; color:#0F172A;
+    border-left:3px solid #4f46e5; padding-left:8px; margin-bottom:10px;
+  }
+  /* Language table */
+  .lang-table { width:100%; border-collapse:collapse; }
+  .lang-table th {
+    font-size:9px; font-weight:700; color:#64748B; text-transform:uppercase;
+    letter-spacing:.5px; padding:5px 8px; text-align:left;
+    border-bottom:2px solid #E2E8F0;
+  }
+  .lang-table td {
+    font-size:11px; color:#0f172a; padding:7px 8px;
+    border-bottom:1px solid #F1F5F9;
+  }
+  .lang-table tr:last-child td { border-bottom:none; }
+  .lang-pill {
+    display:inline-block; background:#EEF2FF; border:1px solid #C7D2FE;
+    color:#4f46e5; border-radius:12px; padding:2px 8px;
+    font-size:10px; font-weight:700;
+  }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <div class="app-header">
+    <div>
+      <div class="app-header-title">🎬 TITLE PERFORMANCE ANALYST</div>
+      <div class="app-header-sub">APAC · Max / HBO Max · AI-Powered Streaming Analytics</div>
+    </div>
+    <div class="app-header-badge">9 Agents · Live</div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab">🤖 Agent Chat</div>
+    <div class="tab">📊 Overview</div>
+    <div class="tab">🌏 Markets</div>
+    <div class="tab active">🎭 Genre Health</div>
+    <div class="tab">📉 Episode Drop-off</div>
+    <div class="tab">🚨 Alerts</div>
+  </div>
+
+  <div class="main">
+
+    <div class="sidebar">
+      <div class="sidebar-title">🎬 Title Performance</div>
+      <div class="sidebar-sub">APAC Analytics · Max / HBO Max</div>
+      <div class="sidebar-section">Quick Queries</div>
+      <div class="sidebar-cat" style="color:#DC2626;">🔍 Diagnosis</div>
+      <div class="sidebar-btn">Why is Euphoria S2 underperform…</div>
+      <div class="sidebar-btn">Why did viewership drop after ep…</div>
+      <div class="sidebar-cat" style="color:#4f46e5;">📊 Snapshot</div>
+      <div class="sidebar-btn">HotD S2 vs fantasy benchmarks?</div>
+      <div class="sidebar-btn">Compare TLOU S2 vs genre benchm…</div>
+      <div class="sidebar-cat" style="color:#0ea5e9;">📈 Trend</div>
+      <div class="sidebar-btn">Is TLOU S2 gaining momentum?</div>
+      <div class="sidebar-btn">Fastest growing markets for HotD</div>
+      <div class="sidebar-cat" style="color:#7c3aed;">🎭 Genre</div>
+      <div class="sidebar-btn">Titles w/ high starts, low comp…</div>
+      <div class="sidebar-btn">Full genre health report APAC</div>
+      <div class="sidebar-cat" style="color:#16a34a;">👤 Subscriber</div>
+      <div class="sidebar-btn">Does HotD reduce churn risk?</div>
+      <div class="sidebar-cat" style="color:#d97706;">🚨 Alerts</div>
+      <div class="sidebar-btn">Which titles need attention now?</div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section">Active Agents</div>
+      <div class="sidebar-agent">🧠 Orchestrator</div>
+      <div class="sidebar-agent">📊 Data Agent</div>
+      <div class="sidebar-agent">🎭 Genre Catalog Agent</div>
+      <div class="sidebar-agent">📐 Benchmark Agent</div>
+      <div class="sidebar-agent">⚖️ Quality Critic</div>
+    </div>
+
+    <div class="content">
+
+      <!-- Filter Bar -->
+      <div class="filter-bar">
+        <div class="filter-item">
+          <div class="filter-label">Time Period</div>
+          <div class="filter-select">Last 30 days ▾</div>
+        </div>
+        <div class="filter-item">
+          <div class="filter-label">Market</div>
+          <div class="filter-select">All APAC Markets ▾</div>
+        </div>
+        <div class="filter-item">
+          <div class="filter-label">Genre</div>
+          <div class="filter-select">All Genres ▾</div>
+        </div>
+        <div class="filter-item">
+          <div class="filter-label">Format</div>
+          <div class="filter-select">All Formats ▾</div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="charts-row">
+
+        <!-- Left: Scatter Bubble Chart -->
+        <div class="chart-card" style="flex:1;">
+          <div class="sec">Starts vs Completion Rate by Genre</div>
+          <svg width="100%" viewBox="0 0 400 310" style="overflow:visible;">
+            <style>
+              .ax { font-family:'Inter',sans-serif; font-size:9px; fill:#94a3b8; }
+              .gl { stroke:#E2E8F0; stroke-width:1; }
+              .glbl { font-family:'Inter',sans-serif; font-size:9.5px; font-weight:700; }
+            </style>
+            <!-- Grid lines -->
+            <line class="gl" x1="50" y1="15" x2="50" y2="245"/>
+            <line class="gl" x1="50" y1="245" x2="390" y2="245"/>
+            <line class="gl" x1="50" y1="75" x2="390" y2="75" stroke-dasharray="3,3"/>
+            <line class="gl" x1="50" y1="120" x2="390" y2="120" stroke-dasharray="3,3"/>
+            <line class="gl" x1="50" y1="165" x2="390" y2="165" stroke-dasharray="3,3"/>
+            <line class="gl" x1="50" y1="210" x2="390" y2="210" stroke-dasharray="3,3"/>
+            <!-- Y axis labels -->
+            <text class="ax" x="44" y="77" text-anchor="end" dominant-baseline="middle">80%</text>
+            <text class="ax" x="44" y="122" text-anchor="end" dominant-baseline="middle">65%</text>
+            <text class="ax" x="44" y="167" text-anchor="end" dominant-baseline="middle">50%</text>
+            <text class="ax" x="44" y="212" text-anchor="end" dominant-baseline="middle">35%</text>
+            <!-- X axis labels -->
+            <text class="ax" x="50" y="256" text-anchor="middle">0</text>
+            <text class="ax" x="160" y="256" text-anchor="middle">100K</text>
+            <text class="ax" x="270" y="256" text-anchor="middle">250K</text>
+            <text class="ax" x="380" y="256" text-anchor="middle">420K</text>
+            <!-- Axis titles -->
+            <text x="220" y="272" font-size="10" fill="#64748b" font-family="Inter" text-anchor="middle">Total Starts</text>
+            <text x="14" y="145" font-size="10" fill="#64748b" font-family="Inter" text-anchor="middle" transform="rotate(-90,14,145)">Avg Completion %</text>
+
+            <!-- 60% benchmark line -->
+            <line x1="50" y1="130" x2="390" y2="130" stroke="#64748b" stroke-width="1" stroke-dasharray="5,3"/>
+            <text x="392" y="130" font-size="9" fill="#64748b" font-family="Inter" dominant-baseline="middle">60% benchmark</text>
+
+            <!-- Bubbles (cx, cy calculated from data) -->
+            <!-- Drama: 380K starts, 65% CR, n=12 → cx=50+(380/420)*340=358, cy=245-(65-35)/50*230=245-138=107, r=16 -->
+            <circle cx="358" cy="107" r="16" fill="#16a34a" fill-opacity="0.75" stroke="#16a34a" stroke-width="1"/>
+            <text class="glbl" cx="358" cy="107" x="358" y="107" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="8">Drama</text>
+
+            <!-- Fantasy: 210K, 72%, n=6 → cx=50+(210/420)*340=220, cy=245-(72-35)/50*230=245-170.2=75, r=10 -->
+            <circle cx="220" cy="75" r="10" fill="#16a34a" fill-opacity="0.75" stroke="#16a34a" stroke-width="1"/>
+            <text x="220" y="92" font-size="8.5" fill="#16a34a" font-family="Inter" font-weight="700" text-anchor="middle">Fantasy</text>
+
+            <!-- K-Drama: 160K, 74%, n=4 → cx=50+(160/420)*340=180, cy=245-(74-35)/50*230=245-179.4=66, r=8 -->
+            <circle cx="180" cy="66" r="8" fill="#0ea5e9" fill-opacity="0.75" stroke="#0ea5e9" stroke-width="1"/>
+            <text x="180" y="82" font-size="8.5" fill="#0ea5e9" font-family="Inter" font-weight="700" text-anchor="middle">K-Drama</text>
+
+            <!-- Sci-Fi: 175K, 63%, n=5 → cx=50+(175/420)*340=192, cy=245-(63-35)/50*230=245-128.8=116, r=9 -->
+            <circle cx="192" cy="116" r="9" fill="#16a34a" fill-opacity="0.75" stroke="#16a34a" stroke-width="1"/>
+            <text x="192" y="132" font-size="8.5" fill="#16a34a" font-family="Inter" font-weight="700" text-anchor="middle">Sci-Fi</text>
+
+            <!-- Documentary: 45K, 67%, n=7 → cx=50+(45/420)*340=86, cy=245-(67-35)/50*230=245-147.2=98, r=11 -->
+            <circle cx="86" cy="98" r="11" fill="#16a34a" fill-opacity="0.75" stroke="#16a34a" stroke-width="1"/>
+            <text x="86" y="116" font-size="8.5" fill="#16a34a" font-family="Inter" font-weight="700" text-anchor="middle">Docs</text>
+
+            <!-- Crime: 140K, 58%, n=7 → cx=50+(140/420)*340=163, cy=245-(58-35)/50*230=245-105.8=139, r=11 -->
+            <circle cx="163" cy="139" r="11" fill="#d97706" fill-opacity="0.75" stroke="#d97706" stroke-width="1"/>
+            <text x="163" y="157" font-size="8.5" fill="#d97706" font-family="Inter" font-weight="700" text-anchor="middle">Crime</text>
+
+            <!-- Comedy: 78K, 55%, n=6 → cx=50+(78/420)*340=113, cy=245-(55-35)/50*230=245-92=153, r=10 -->
+            <circle cx="113" cy="153" r="10" fill="#d97706" fill-opacity="0.75" stroke="#d97706" stroke-width="1"/>
+            <text x="113" y="170" font-size="8.5" fill="#d97706" font-family="Inter" font-weight="700" text-anchor="middle">Comedy</text>
+
+            <!-- Thriller: 120K, 52%, n=5 → cx=50+(120/420)*340=147, cy=245-(52-35)/50*230=245-78.2=167, r=9 -->
+            <circle cx="147" cy="167" r="9" fill="#d97706" fill-opacity="0.75" stroke="#d97706" stroke-width="1"/>
+            <text x="147" y="183" font-size="8.5" fill="#d97706" font-family="Inter" font-weight="700" text-anchor="middle">Thriller</text>
+
+            <!-- Horror: 95K, 49%, n=4 → cx=50+(95/420)*340=127, cy=245-(49-35)/50*230=245-64.4=181, r=8 -->
+            <circle cx="127" cy="181" r="8" fill="#dc2626" fill-opacity="0.75" stroke="#dc2626" stroke-width="1"/>
+            <text x="127" y="196" font-size="8.5" fill="#dc2626" font-family="Inter" font-weight="700" text-anchor="middle">Horror</text>
+
+            <!-- Action: 85K, 41%, n=3 → cx=50+(85/420)*340=119, cy=245-(41-35)/50*230=245-27.6=217, r=7 -->
+            <circle cx="119" cy="217" r="7" fill="#dc2626" fill-opacity="0.75" stroke="#dc2626" stroke-width="1"/>
+            <text x="119" y="230" font-size="8.5" fill="#dc2626" font-family="Inter" font-weight="700" text-anchor="middle">Action</text>
+          </svg>
+
+          <!-- Legend -->
+          <div style="display:flex; gap:14px; margin-top:4px;">
+            <div style="display:flex; align-items:center; gap:4px; font-size:9px; color:#64748b;">
+              <div style="width:10px; height:10px; border-radius:50%; background:#16a34a;"></div> Strong (≥60%)
+            </div>
+            <div style="display:flex; align-items:center; gap:4px; font-size:9px; color:#64748b;">
+              <div style="width:10px; height:10px; border-radius:50%; background:#d97706;"></div> Watch (45–60%)
+            </div>
+            <div style="display:flex; align-items:center; gap:4px; font-size:9px; color:#64748b;">
+              <div style="width:10px; height:10px; border-radius:50%; background:#dc2626;"></div> At-Risk (&lt;45%)
+            </div>
+            <div style="margin-left:auto; font-size:9px; color:#64748b;">Bubble size = number of titles</div>
+          </div>
+        </div>
+
+        <!-- Right column -->
+        <div style="flex:1; display:flex; flex-direction:column; gap:12px;">
+
+          <!-- Originals vs Licensed -->
+          <div class="chart-card">
+            <div class="sec">Originals vs Licensed Performance</div>
+            <div style="display:flex; gap:10px;">
+              <!-- Originals card -->
+              <div style="flex:1; background:#F0FDF4; border:1px solid #86EFAC; border-radius:8px; padding:10px 12px;">
+                <div style="font-size:10px; font-weight:700; color:#16a34a; margin-bottom:8px;">🎬 HBO Originals (48 titles)</div>
+                <div style="display:flex; flex-direction:column; gap:6px;">
+                  <div>
+                    <div style="font-size:9px; color:#64748b; font-weight:600; text-transform:uppercase; letter-spacing:.4px;">Total Starts</div>
+                    <div style="font-size:18px; font-weight:800; color:#0f172a; line-height:1.2;">2.1M</div>
+                  </div>
+                  <div>
+                    <div style="font-size:9px; color:#64748b; font-weight:600; text-transform:uppercase; letter-spacing:.4px;">Avg Completion</div>
+                    <div style="font-size:18px; font-weight:800; color:#16a34a; line-height:1.2;">65%</div>
+                    <div style="font-size:9px; color:#16a34a; font-weight:600; margin-top:1px;">↑ 8pp above genre avg</div>
+                  </div>
+                  <div>
+                    <!-- Progress bar -->
+                    <div style="height:6px; background:#E2E8F0; border-radius:3px; overflow:hidden;">
+                      <div style="width:65%; height:100%; background:#16a34a; border-radius:3px;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Licensed card -->
+              <div style="flex:1; background:#FFF7ED; border:1px solid #FED7AA; border-radius:8px; padding:10px 12px;">
+                <div style="font-size:10px; font-weight:700; color:#d97706; margin-bottom:8px;">📦 Licensed (11 titles)</div>
+                <div style="display:flex; flex-direction:column; gap:6px;">
+                  <div>
+                    <div style="font-size:9px; color:#64748b; font-weight:600; text-transform:uppercase; letter-spacing:.4px;">Total Starts</div>
+                    <div style="font-size:18px; font-weight:800; color:#0f172a; line-height:1.2;">450K</div>
+                  </div>
+                  <div>
+                    <div style="font-size:9px; color:#64748b; font-weight:600; text-transform:uppercase; letter-spacing:.4px;">Avg Completion</div>
+                    <div style="font-size:18px; font-weight:800; color:#d97706; line-height:1.2;">48%</div>
+                    <div style="font-size:9px; color:#d97706; font-weight:600; margin-top:1px;">↓ 9pp below genre avg</div>
+                  </div>
+                  <div>
+                    <div style="height:6px; background:#E2E8F0; border-radius:3px; overflow:hidden;">
+                      <div style="width:48%; height:100%; background:#d97706; border-radius:3px;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Language Performance table -->
+          <div class="chart-card" style="flex:1;">
+            <div class="sec">Language Performance</div>
+            <table class="lang-table">
+              <thead>
+                <tr>
+                  <th>Language</th>
+                  <th style="text-align:right;">Starts</th>
+                  <th style="text-align:right;">Completion %</th>
+                  <th style="text-align:right;">Titles</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="lang-pill">EN</span></td>
+                  <td style="text-align:right; font-weight:600;">2.8M</td>
+                  <td style="text-align:right;">
+                    <span style="color:#16a34a; font-weight:700;">61%</span>
+                  </td>
+                  <td style="text-align:right; color:#64748b;">38</td>
+                </tr>
+                <tr>
+                  <td><span class="lang-pill">KO</span></td>
+                  <td style="text-align:right; font-weight:600;">510K</td>
+                  <td style="text-align:right;">
+                    <span style="color:#16a34a; font-weight:700;">74%</span>
+                  </td>
+                  <td style="text-align:right; color:#64748b;">8</td>
+                </tr>
+                <tr>
+                  <td><span class="lang-pill">JA</span></td>
+                  <td style="text-align:right; font-weight:600;">175K</td>
+                  <td style="text-align:right;">
+                    <span style="color:#16a34a; font-weight:700;">68%</span>
+                  </td>
+                  <td style="text-align:right; color:#64748b;">6</td>
+                </tr>
+                <tr>
+                  <td><span class="lang-pill">IT</span></td>
+                  <td style="text-align:right; font-weight:600;">95K</td>
+                  <td style="text-align:right;">
+                    <span style="color:#d97706; font-weight:700;">52%</span>
+                  </td>
+                  <td style="text-align:right; color:#64748b;">7</td>
+                </tr>
+              </tbody>
+            </table>
+            <div style="margin-top:10px; padding:8px 10px; background:#EEF2FF; border-radius:6px; border:1px solid #C7D2FE;">
+              <div style="font-size:10px; color:#4f46e5; font-weight:600;">
+                💡 Insight: Korean content (KO) leads APAC at 74% avg completion — 13pp above English titles. K-Drama demand strong in JP, TW, TH markets.
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /right -->
+      </div><!-- /charts-row -->
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app-shell -->
+</body>
+</html>

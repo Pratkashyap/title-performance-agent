@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family:'Inter',sans-serif;
+    background:#F0F2F8;
+    min-height:100vh;
+    display:flex; flex-direction:column; align-items:center;
+    padding:24px 0 40px;
+  }
+  .app-shell {
+    width:980px;
+    background:#fff;
+    border-radius:12px;
+    border:1px solid #E2E8F0;
+    overflow:hidden;
+    box-shadow:0 4px 24px rgba(0,0,0,0.10);
+  }
+  .app-header {
+    background:#1E2130; padding:12px 20px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .app-header-title { font-size:14px; font-weight:800; color:#fff; }
+  .app-header-sub { font-size:11px; color:#64748B; margin-top:2px; }
+  .app-header-badge {
+    background:#4f46e5; color:#fff; border-radius:20px;
+    padding:4px 14px; font-size:11px; font-weight:700;
+  }
+  .tabs {
+    background:#fff; border-bottom:1px solid #E2E8F0;
+    display:flex; gap:2px; padding:8px 16px 0;
+  }
+  .tab {
+    padding:7px 16px; font-size:12px; font-weight:600;
+    color:#64748B; border-radius:5px 5px 0 0;
+    border:1px solid transparent; border-bottom:none;
+  }
+  .tab.active { background:#4f46e5; color:#fff; border-color:#4f46e5; }
+  .main { display:flex; min-height:540px; }
+  .sidebar {
+    width:220px; background:#1E2130; border-right:1px solid #2d3048;
+    padding:14px 12px; flex-shrink:0;
+  }
+  .sidebar-title { font-size:13px; font-weight:800; color:#fff; margin-bottom:2px; }
+  .sidebar-sub { font-size:10px; color:#64748B; margin-bottom:14px; }
+  .sidebar-section {
+    font-size:9px; font-weight:700; color:#64748B;
+    text-transform:uppercase; letter-spacing:.8px; margin-bottom:8px;
+  }
+  .sidebar-cat { font-size:9px; font-weight:700; margin:10px 0 4px; }
+  .sidebar-btn {
+    background:#2a2f47; border:1px solid #3d4461; border-radius:5px;
+    color:#CBD5E1; font-size:10px; padding:5px 8px; margin-bottom:3px;
+    width:100%; text-align:left; white-space:nowrap;
+    overflow:hidden; text-overflow:ellipsis; display:block;
+  }
+  .sidebar-divider { border-top:1px solid #2d3048; margin:12px 0; }
+  .sidebar-agent { font-size:10px; color:#94A3B8; padding:2px 0; }
+  .content { flex:1; background:#F8FAFC; padding:14px 16px; overflow:auto; }
+  .sec {
+    font-size:12px; font-weight:700; color:#0F172A;
+    border-left:3px solid #4f46e5; padding-left:8px; margin-bottom:10px;
+  }
+  .title-selector {
+    background:#fff; border:1px solid #E2E8F0; border-radius:8px;
+    padding:10px 14px; margin-bottom:14px;
+    display:flex; align-items:center; gap:14px;
+  }
+  .sel-label { font-size:9px; font-weight:700; color:#64748B; text-transform:uppercase; letter-spacing:.5px; }
+  .sel-box {
+    font-size:12px; color:#0f172a; font-weight:600; background:#F8FAFC;
+    border:1.5px solid #4f46e5; border-radius:6px; padding:5px 12px;
+    font-family:'Inter',sans-serif;
+  }
+  .sel-meta { font-size:11px; color:#64748b; margin-left:auto; }
+  .charts-row { display:flex; gap:12px; }
+  .chart-card { background:#fff; border:1px solid #E2E8F0; border-radius:10px; padding:12px 14px; }
+  .insight-box {
+    margin-top:12px; background:#FFF7ED; border:1px solid #FED7AA;
+    border-radius:8px; padding:10px 12px;
+  }
+  .insight-title { font-size:10px; font-weight:700; color:#d97706; margin-bottom:4px; }
+  .insight-text { font-size:11px; color:#334155; line-height:1.6; }
+  .stat-row { display:flex; gap:10px; margin-bottom:12px; }
+  .stat-mini {
+    flex:1; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px;
+    padding:8px 10px; text-align:center;
+  }
+  .stat-mini-label { font-size:9px; font-weight:600; color:#64748b; text-transform:uppercase; letter-spacing:.4px; margin-bottom:2px; }
+  .stat-mini-value { font-size:16px; font-weight:800; color:#0f172a; line-height:1; }
+  .stat-mini-sub { font-size:9px; margin-top:2px; font-weight:600; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <div class="app-header">
+    <div>
+      <div class="app-header-title">🎬 TITLE PERFORMANCE ANALYST</div>
+      <div class="app-header-sub">APAC · Max / HBO Max · AI-Powered Streaming Analytics</div>
+    </div>
+    <div class="app-header-badge">9 Agents · Live</div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab">🤖 Agent Chat</div>
+    <div class="tab">📊 Overview</div>
+    <div class="tab">🌏 Markets</div>
+    <div class="tab">🎭 Genre Health</div>
+    <div class="tab active">📉 Episode Drop-off</div>
+    <div class="tab">🚨 Alerts</div>
+  </div>
+
+  <div class="main">
+
+    <div class="sidebar">
+      <div class="sidebar-title">🎬 Title Performance</div>
+      <div class="sidebar-sub">APAC Analytics · Max / HBO Max</div>
+      <div class="sidebar-section">Quick Queries</div>
+      <div class="sidebar-cat" style="color:#DC2626;">🔍 Diagnosis</div>
+      <div class="sidebar-btn">Why is Euphoria S2 underperform…</div>
+      <div class="sidebar-btn">Why did viewership drop after ep…</div>
+      <div class="sidebar-cat" style="color:#4f46e5;">📊 Snapshot</div>
+      <div class="sidebar-btn">HotD S2 vs fantasy benchmarks?</div>
+      <div class="sidebar-btn">Compare TLOU S2 vs genre benchm…</div>
+      <div class="sidebar-cat" style="color:#0ea5e9;">📈 Trend</div>
+      <div class="sidebar-btn">Is TLOU S2 gaining momentum?</div>
+      <div class="sidebar-btn">Fastest growing markets for HotD</div>
+      <div class="sidebar-cat" style="color:#7c3aed;">🎭 Genre</div>
+      <div class="sidebar-btn">Titles w/ high starts, low comp…</div>
+      <div class="sidebar-btn">Full genre health report APAC</div>
+      <div class="sidebar-cat" style="color:#16a34a;">👤 Subscriber</div>
+      <div class="sidebar-btn">Does HotD reduce churn risk?</div>
+      <div class="sidebar-cat" style="color:#d97706;">🚨 Alerts</div>
+      <div class="sidebar-btn">Which titles need attention now?</div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section">Active Agents</div>
+      <div class="sidebar-agent">🧠 Orchestrator</div>
+      <div class="sidebar-agent">📊 Data Agent</div>
+      <div class="sidebar-agent">🔍 Perf Analyst</div>
+      <div class="sidebar-agent">📈 Trend Agent</div>
+      <div class="sidebar-agent">⚖️ Quality Critic</div>
+    </div>
+
+    <div class="content">
+
+      <!-- Title Selector -->
+      <div class="title-selector">
+        <div>
+          <div class="sel-label">Select Title</div>
+          <div class="sel-box">House of the Dragon S2 ▾</div>
+        </div>
+        <div style="display:flex; gap:8px; margin-left:12px; align-items:flex-end;">
+          <div style="text-align:center; background:#EEF2FF; border:1px solid #C7D2FE; border-radius:6px; padding:4px 10px;">
+            <div style="font-size:9px; color:#4f46e5; font-weight:700; text-transform:uppercase;">Format</div>
+            <div style="font-size:11px; font-weight:700; color:#0f172a;">Series · Fantasy</div>
+          </div>
+          <div style="text-align:center; background:#EEF2FF; border:1px solid #C7D2FE; border-radius:6px; padding:4px 10px;">
+            <div style="font-size:9px; color:#4f46e5; font-weight:700; text-transform:uppercase;">Episodes</div>
+            <div style="font-size:11px; font-weight:700; color:#0f172a;">10 episodes</div>
+          </div>
+          <div style="text-align:center; background:#F0FDF4; border:1px solid #86EFAC; border-radius:6px; padding:4px 10px;">
+            <div style="font-size:9px; color:#16a34a; font-weight:700; text-transform:uppercase;">HBO Original</div>
+            <div style="font-size:11px; font-weight:700; color:#16a34a;">✓ Yes</div>
+          </div>
+        </div>
+        <div class="sel-meta">Data: Jan 1 – Mar 31, 2026 · All APAC markets</div>
+      </div>
+
+      <!-- Summary Stats Row -->
+      <div class="stat-row">
+        <div class="stat-mini">
+          <div class="stat-mini-label">Ep 1 Starts</div>
+          <div class="stat-mini-value">89K</div>
+          <div class="stat-mini-sub" style="color:#16a34a;">Peak episode</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-label">Ep 10 Starts</div>
+          <div class="stat-mini-value">38K</div>
+          <div class="stat-mini-sub" style="color:#dc2626;">−57% from Ep 1</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-label">Avg Drop-off</div>
+          <div class="stat-mini-value">62%</div>
+          <div class="stat-mini-sub" style="color:#d97706;">through episode</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-label">Critical Drop Ep</div>
+          <div class="stat-mini-value" style="color:#dc2626;">Ep 6</div>
+          <div class="stat-mini-sub" style="color:#dc2626;">−12% WoW decline</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-label">Series Completion</div>
+          <div class="stat-mini-value" style="color:#16a34a;">71%</div>
+          <div class="stat-mini-sub" style="color:#16a34a;">↑ 11pp vs benchmark</div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="charts-row">
+
+        <!-- Left: Starts per Episode bar chart -->
+        <div class="chart-card" style="flex:1;">
+          <div class="sec">Starts per Episode</div>
+          <svg width="100%" viewBox="0 0 360 270" style="overflow:visible;">
+            <style>
+              .eax { font-family:'Inter',sans-serif; font-size:9px; fill:#94a3b8; }
+              .egl { stroke:#E2E8F0; stroke-width:1; }
+            </style>
+            <!-- Grid lines -->
+            <line class="egl" x1="20" y1="20" x2="350" y2="20"/>
+            <line class="egl" x1="20" y1="70" x2="350" y2="70"/>
+            <line class="egl" x1="20" y1="120" x2="350" y2="120"/>
+            <line class="egl" x1="20" y1="170" x2="350" y2="170"/>
+            <line class="egl" x1="20" y1="218" x2="350" y2="218"/>
+            <!-- Y axis labels -->
+            <text class="eax" x="15" y="20" text-anchor="end" dominant-baseline="middle">90K</text>
+            <text class="eax" x="15" y="70" text-anchor="end" dominant-baseline="middle">70K</text>
+            <text class="eax" x="15" y="120" text-anchor="end" dominant-baseline="middle">50K</text>
+            <text class="eax" x="15" y="170" text-anchor="end" dominant-baseline="middle">30K</text>
+            <text class="eax" x="15" y="218" text-anchor="end" dominant-baseline="middle">0</text>
+
+            <!-- Bars (x offset=20, barw=26, gap=7, step=33) -->
+            <!-- scale: 218px for 90K → 2.422 px per K -->
+            <!-- Ep1: 89K → h=215.6≈216, y=218-216=2 → green -->
+            <rect x="20"  y="2"   width="26" height="216" rx="3" fill="#16a34a"/>
+            <text x="33"  y="0"   font-size="8.5" fill="#0f172a" font-family="Inter" font-weight="600" text-anchor="middle">89K</text>
+            <!-- Ep2: 85K → h=205.9≈206, y=12 → green -->
+            <rect x="53"  y="12"  width="26" height="206" rx="3" fill="#16a34a"/>
+            <text x="66"  y="10"  font-size="8.5" fill="#0f172a" font-family="Inter" font-weight="600" text-anchor="middle">85K</text>
+            <!-- Ep3: 79K → h=191.3≈191, y=27 → green -->
+            <rect x="86"  y="27"  width="26" height="191" rx="3" fill="#16a34a"/>
+            <text x="99"  y="25"  font-size="8.5" fill="#0f172a" font-family="Inter" font-weight="600" text-anchor="middle">79K</text>
+            <!-- Ep4: 74K → h=179.2≈179, y=39 → green -->
+            <rect x="119" y="39"  width="26" height="179" rx="3" fill="#16a34a"/>
+            <text x="132" y="37"  font-size="8.5" fill="#0f172a" font-family="Inter" font-weight="600" text-anchor="middle">74K</text>
+            <!-- Ep5: 68K → h=164.7≈165, y=53 → green -->
+            <rect x="152" y="53"  width="26" height="165" rx="3" fill="#16a34a"/>
+            <text x="165" y="51"  font-size="8.5" fill="#0f172a" font-family="Inter" font-weight="600" text-anchor="middle">68K</text>
+            <!-- Ep6: 61K → h=147.7≈148, y=70 → amber (first dip) -->
+            <rect x="185" y="70"  width="26" height="148" rx="3" fill="#d97706"/>
+            <text x="198" y="68"  font-size="8.5" fill="#d97706" font-family="Inter" font-weight="700" text-anchor="middle">61K</text>
+            <!-- Ep7: 52K → h=125.9≈126, y=92 → amber -->
+            <rect x="218" y="92"  width="26" height="126" rx="3" fill="#d97706"/>
+            <text x="231" y="90"  font-size="8.5" fill="#d97706" font-family="Inter" font-weight="700" text-anchor="middle">52K</text>
+            <!-- Ep8: 45K → h=109.0, y=109 → amber -->
+            <rect x="251" y="109" width="26" height="109" rx="3" fill="#d97706"/>
+            <text x="264" y="107" font-size="8.5" fill="#d97706" font-family="Inter" font-weight="700" text-anchor="middle">45K</text>
+            <!-- Ep9: 41K → h=99.3≈99, y=119 → red -->
+            <rect x="284" y="119" width="26" height="99"  rx="3" fill="#dc2626"/>
+            <text x="297" y="117" font-size="8.5" fill="#dc2626" font-family="Inter" font-weight="700" text-anchor="middle">41K</text>
+            <!-- Ep10: 38K → h=92.0, y=126 → red -->
+            <rect x="317" y="126" width="26" height="92"  rx="3" fill="#dc2626"/>
+            <text x="330" y="124" font-size="8.5" fill="#dc2626" font-family="Inter" font-weight="700" text-anchor="middle">38K</text>
+
+            <!-- X axis labels -->
+            <text class="eax" x="33"  y="228" text-anchor="middle">Ep 1</text>
+            <text class="eax" x="66"  y="228" text-anchor="middle">Ep 2</text>
+            <text class="eax" x="99"  y="228" text-anchor="middle">Ep 3</text>
+            <text class="eax" x="132" y="228" text-anchor="middle">Ep 4</text>
+            <text class="eax" x="165" y="228" text-anchor="middle">Ep 5</text>
+            <text x="198" y="228" font-size="9" fill="#d97706" font-family="Inter" font-weight="700" text-anchor="middle">Ep 6</text>
+            <text x="231" y="228" font-size="9" fill="#d97706" font-family="Inter" font-weight="700" text-anchor="middle">Ep 7</text>
+            <text x="264" y="228" font-size="9" fill="#d97706" font-family="Inter" font-weight="700" text-anchor="middle">Ep 8</text>
+            <text x="297" y="228" font-size="9" fill="#dc2626" font-family="Inter" font-weight="700" text-anchor="middle">Ep 9</text>
+            <text x="330" y="228" font-size="9" fill="#dc2626" font-family="Inter" font-weight="700" text-anchor="middle">Ep 10</text>
+
+            <!-- Annotation arrow at Ep 6 -->
+            <line x1="198" y1="60" x2="198" y2="72" stroke="#d97706" stroke-width="1.5" marker-end="url(#arr)"/>
+            <text x="198" y="55" font-size="8.5" fill="#d97706" font-family="Inter" font-weight="700" text-anchor="middle">Drop starts</text>
+
+            <!-- Legend -->
+            <rect x="20" y="242" width="8" height="8" rx="1.5" fill="#16a34a"/>
+            <text x="32" y="247" font-size="8.5" fill="#64748b" font-family="Inter" dominant-baseline="middle">Strong (≥75% of peak)</text>
+            <rect x="155" y="242" width="8" height="8" rx="1.5" fill="#d97706"/>
+            <text x="167" y="247" font-size="8.5" fill="#64748b" font-family="Inter" dominant-baseline="middle">Watch (50–75%)</text>
+            <rect x="265" y="242" width="8" height="8" rx="1.5" fill="#dc2626"/>
+            <text x="277" y="247" font-size="8.5" fill="#64748b" font-family="Inter" dominant-baseline="middle">At-Risk (&lt;50%)</text>
+          </svg>
+        </div>
+
+        <!-- Right: Drop-off point line chart -->
+        <div class="chart-card" style="flex:1;">
+          <div class="sec">Avg Drop-off Point (% through episode)</div>
+          <svg width="100%" viewBox="0 0 360 270" style="overflow:visible;">
+            <defs>
+              <linearGradient id="dropfill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#4f46e5" stop-opacity="0.15"/>
+                <stop offset="100%" stop-color="#4f46e5" stop-opacity="0.01"/>
+              </linearGradient>
+            </defs>
+            <style>
+              .dax { font-family:'Inter',sans-serif; font-size:9px; fill:#94a3b8; }
+              .dgl { stroke:#E2E8F0; stroke-width:1; }
+            </style>
+            <!-- Grid lines -->
+            <line class="dgl" x1="35" y1="15"  x2="355" y2="15"/>
+            <line class="dgl" x1="35" y1="60"  x2="355" y2="60"/>
+            <line class="dgl" x1="35" y1="105" x2="355" y2="105"/>
+            <line class="dgl" x1="35" y1="150" x2="355" y2="150"/>
+            <line class="dgl" x1="35" y1="195" x2="355" y2="195"/>
+            <line class="dgl" x1="35" y1="225" x2="355" y2="225"/>
+            <!-- Y labels -->
+            <text class="dax" x="30" y="15"  text-anchor="end" dominant-baseline="middle">100%</text>
+            <text class="dax" x="30" y="60"  text-anchor="end" dominant-baseline="middle">80%</text>
+            <text class="dax" x="30" y="105" text-anchor="end" dominant-baseline="middle">60%</text>
+            <text class="dax" x="30" y="150" text-anchor="end" dominant-baseline="middle">40%</text>
+            <text class="dax" x="30" y="195" text-anchor="end" dominant-baseline="middle">20%</text>
+
+            <!-- 50% midpoint line -->
+            <!-- 50% → y = 225 - (50/100)*210 = 225-105 = 120 -->
+            <line x1="35" y1="120" x2="355" y2="120" stroke="#d97706" stroke-width="1.2" stroke-dasharray="5,3"/>
+            <text x="357" y="120" font-size="9" fill="#d97706" font-family="Inter" dominant-baseline="middle">50% midpoint</text>
+
+            <!-- Scale: Y range 0-100% → 0 to 225px, y_px = 225 - val/100*210 -->
+            <!-- 88% → y=225-184.8=40.2≈40 -->
+            <!-- 84% → y=225-176.4=48.6≈49 -->
+            <!-- 78% → y=225-163.8=61.2≈61 -->
+            <!-- 73% → y=225-153.3=71.7≈72 -->
+            <!-- 68% → y=225-142.8=82.2≈82 -->
+            <!-- 62% → y=225-130.2=94.8≈95 -->
+            <!-- 58% → y=225-121.8=103.2≈103 -->
+            <!-- 52% → y=225-109.2=115.8≈116 -->
+            <!-- 47% → y=225-98.7=126.3≈126 -->
+            <!-- 43% → y=225-90.3=134.7≈135 -->
+
+            <!-- X positions: 10 pts from x=35 to x=355, step=(355-35)/9=35.6 -->
+            <!-- x: 35, 70.6, 106.1, 141.7, 177.2, 212.8, 248.3, 283.9, 319.4, 355 -->
+
+            <!-- Fill area -->
+            <polygon
+              points="35,40 70.6,49 106.1,61 141.7,72 177.2,82 212.8,95 248.3,103 283.9,116 319.4,126 355,135 355,225 35,225"
+              fill="url(#dropfill)"/>
+
+            <!-- Line -->
+            <polyline
+              points="35,40 70.6,49 106.1,61 141.7,72 177.2,82 212.8,95 248.3,103 283.9,116 319.4,126 355,135"
+              fill="none" stroke="#4f46e5" stroke-width="2.2" stroke-linejoin="round"/>
+
+            <!-- Data points (circles) -->
+            <circle cx="35"   cy="40"  r="4" fill="#4f46e5" stroke="#fff" stroke-width="1.5"/>
+            <circle cx="70.6" cy="49"  r="4" fill="#4f46e5" stroke="#fff" stroke-width="1.5"/>
+            <circle cx="106.1" cy="61" r="4" fill="#4f46e5" stroke="#fff" stroke-width="1.5"/>
+            <circle cx="141.7" cy="72" r="4" fill="#4f46e5" stroke="#fff" stroke-width="1.5"/>
+            <circle cx="177.2" cy="82" r="4" fill="#4f46e5" stroke="#fff" stroke-width="1.5"/>
+            <circle cx="212.8" cy="95" r="4.5" fill="#d97706" stroke="#fff" stroke-width="1.5"/>
+            <circle cx="248.3" cy="103" r="4.5" fill="#d97706" stroke="#fff" stroke-width="1.5"/>
+            <circle cx="283.9" cy="116" r="4.5" fill="#d97706" stroke="#fff" stroke-width="1.5"/>
+            <circle cx="319.4" cy="126" r="4.5" fill="#dc2626" stroke="#fff" stroke-width="1.5"/>
+            <circle cx="355"   cy="135" r="4.5" fill="#dc2626" stroke="#fff" stroke-width="1.5"/>
+
+            <!-- Value labels above points -->
+            <text x="35"   y="34"  font-size="8.5" fill="#4f46e5" font-family="Inter" font-weight="700" text-anchor="middle">88%</text>
+            <text x="106.1" y="55" font-size="8.5" fill="#4f46e5" font-family="Inter" font-weight="700" text-anchor="middle">78%</text>
+            <text x="212.8" y="89" font-size="8.5" fill="#d97706" font-family="Inter" font-weight="700" text-anchor="middle">62%</text>
+            <text x="355"  y="129" font-size="8.5" fill="#dc2626" font-family="Inter" font-weight="700" text-anchor="middle">43%</text>
+
+            <!-- X axis labels -->
+            <text class="dax" x="35"   y="234" text-anchor="middle">Ep 1</text>
+            <text class="dax" x="70.6" y="234" text-anchor="middle">Ep 2</text>
+            <text class="dax" x="106.1" y="234" text-anchor="middle">Ep 3</text>
+            <text class="dax" x="141.7" y="234" text-anchor="middle">Ep 4</text>
+            <text class="dax" x="177.2" y="234" text-anchor="middle">Ep 5</text>
+            <text x="212.8" y="234" font-size="9" fill="#d97706" font-family="Inter" font-weight="700" text-anchor="middle">Ep 6</text>
+            <text x="248.3" y="234" font-size="9" fill="#d97706" font-family="Inter" font-weight="700" text-anchor="middle">Ep 7</text>
+            <text x="283.9" y="234" font-size="9" fill="#d97706" font-family="Inter" font-weight="700" text-anchor="middle">Ep 8</text>
+            <text x="319.4" y="234" font-size="9" fill="#dc2626" font-family="Inter" font-weight="700" text-anchor="middle">Ep 9</text>
+            <text x="355"   y="234" font-size="9" fill="#dc2626" font-family="Inter" font-weight="700" text-anchor="middle">Ep 10</text>
+
+            <!-- Y axis title -->
+            <text x="8" y="120" font-size="9" fill="#64748b" font-family="Inter" text-anchor="middle" transform="rotate(-90,8,120)">% through episode at drop-off</text>
+          </svg>
+
+          <!-- Insight box -->
+          <div class="insight-box">
+            <div class="insight-title">⚠ Key Drop-off Finding</div>
+            <div class="insight-text">
+              Viewers begin dropping at <strong>Ep 6 (62%)</strong> — crossing below the 50% midpoint threshold by Ep 9.
+              This suggests a <strong>narrative pacing issue in the second half</strong> of the season.
+              AU and JP markets show the sharpest retention curves; IN and TH show steepest drop after Ep 7.
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /charts-row -->
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app-shell -->
+</body>
+</html>

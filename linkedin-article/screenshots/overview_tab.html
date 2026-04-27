@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family:'Inter',sans-serif;
+    background:#F0F2F8;
+    min-height:100vh;
+    display:flex; flex-direction:column; align-items:center;
+    padding:24px 0 40px;
+  }
+  .app-shell {
+    width:980px;
+    background:#fff;
+    border-radius:12px;
+    border:1px solid #E2E8F0;
+    overflow:hidden;
+    box-shadow:0 4px 24px rgba(0,0,0,0.10);
+  }
+  .app-header {
+    background:#1E2130;
+    padding:12px 20px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .app-header-title { font-size:14px; font-weight:800; color:#fff; }
+  .app-header-sub { font-size:11px; color:#64748B; margin-top:2px; }
+  .app-header-badge {
+    background:#4f46e5; color:#fff; border-radius:20px;
+    padding:4px 14px; font-size:11px; font-weight:700;
+  }
+  .tabs {
+    background:#fff; border-bottom:1px solid #E2E8F0;
+    display:flex; gap:2px; padding:8px 16px 0;
+  }
+  .tab {
+    padding:7px 16px; font-size:12px; font-weight:600;
+    color:#64748B; border-radius:5px 5px 0 0; cursor:pointer;
+    border:1px solid transparent; border-bottom:none;
+  }
+  .tab.active { background:#4f46e5; color:#fff; border-color:#4f46e5; }
+  .main { display:flex; min-height:580px; }
+  .sidebar {
+    width:220px; background:#1E2130; border-right:1px solid #2d3048;
+    padding:14px 12px; flex-shrink:0;
+  }
+  .sidebar-title { font-size:13px; font-weight:800; color:#fff; margin-bottom:2px; }
+  .sidebar-sub { font-size:10px; color:#64748B; margin-bottom:14px; }
+  .sidebar-section {
+    font-size:9px; font-weight:700; color:#64748B;
+    text-transform:uppercase; letter-spacing:.8px; margin-bottom:8px;
+  }
+  .sidebar-cat { font-size:9px; font-weight:700; margin:10px 0 4px; }
+  .sidebar-btn {
+    background:#2a2f47; border:1px solid #3d4461; border-radius:5px;
+    color:#CBD5E1; font-size:10px; padding:5px 8px;
+    margin-bottom:3px; width:100%; text-align:left;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    display:block;
+  }
+  .sidebar-divider { border-top:1px solid #2d3048; margin:12px 0; }
+  .sidebar-agent { font-size:10px; color:#94A3B8; padding:2px 0; }
+  .content { flex:1; background:#F8FAFC; padding:14px 16px; overflow:auto; }
+  .filter-bar {
+    background:#fff; border:1px solid #E2E8F0; border-radius:8px;
+    padding:10px 14px; margin-bottom:14px;
+    display:flex; gap:20px; align-items:center;
+  }
+  .filter-item { display:flex; flex-direction:column; gap:3px; min-width:110px; }
+  .filter-label { font-size:9px; font-weight:700; color:#64748B; text-transform:uppercase; letter-spacing:.5px; }
+  .filter-select {
+    font-size:11px; color:#0f172a; background:#F8FAFC;
+    border:1px solid #CBD5E1; border-radius:5px;
+    padding:4px 8px; font-family:'Inter',sans-serif;
+  }
+  .kpi-row { display:flex; gap:10px; margin-bottom:14px; }
+  .kpi {
+    flex:1; background:#fff; border:1px solid #E2E8F0; border-radius:10px;
+    padding:12px 14px;
+  }
+  .kpi-label { font-size:9px; font-weight:700; color:#64748B; text-transform:uppercase; letter-spacing:.7px; margin-bottom:4px; }
+  .kpi-value { font-size:22px; font-weight:800; color:#0f172a; line-height:1; }
+  .kpi-sub   { font-size:10px; color:#64748B; margin-top:3px; }
+  .kpi-up    { font-size:10px; color:#16A34A; margin-top:3px; font-weight:600; }
+  .kpi-down  { font-size:10px; color:#DC2626; margin-top:3px; font-weight:600; }
+  .kpi-warn  { font-size:10px; color:#D97706; margin-top:3px; font-weight:600; }
+  .charts-row { display:flex; gap:12px; }
+  .chart-left { flex:3; background:#fff; border:1px solid #E2E8F0; border-radius:10px; padding:12px 14px; }
+  .chart-right { flex:2; display:flex; flex-direction:column; gap:12px; }
+  .chart-card { background:#fff; border:1px solid #E2E8F0; border-radius:10px; padding:12px 14px; }
+  .sec {
+    font-size:12px; font-weight:700; color:#0F172A;
+    border-left:3px solid #4f46e5; padding-left:8px;
+    margin-bottom:10px;
+  }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <div class="app-header">
+    <div>
+      <div class="app-header-title">🎬 TITLE PERFORMANCE ANALYST</div>
+      <div class="app-header-sub">APAC · Max / HBO Max · AI-Powered Streaming Analytics</div>
+    </div>
+    <div class="app-header-badge">9 Agents · Live</div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab">🤖 Agent Chat</div>
+    <div class="tab active">📊 Overview</div>
+    <div class="tab">🌏 Markets</div>
+    <div class="tab">🎭 Genre Health</div>
+    <div class="tab">📉 Episode Drop-off</div>
+    <div class="tab">🚨 Alerts</div>
+  </div>
+
+  <div class="main">
+
+    <div class="sidebar">
+      <div class="sidebar-title">🎬 Title Performance</div>
+      <div class="sidebar-sub">APAC Analytics · Max / HBO Max</div>
+      <div class="sidebar-section">Quick Queries</div>
+      <div class="sidebar-cat" style="color:#DC2626;">🔍 Diagnosis</div>
+      <div class="sidebar-btn">Why is Euphoria S2 underperform…</div>
+      <div class="sidebar-btn">Why did viewership drop after ep…</div>
+      <div class="sidebar-cat" style="color:#4f46e5;">📊 Snapshot</div>
+      <div class="sidebar-btn">HotD S2 vs fantasy benchmarks?</div>
+      <div class="sidebar-btn">Compare TLOU S2 vs genre benchm…</div>
+      <div class="sidebar-cat" style="color:#0ea5e9;">📈 Trend</div>
+      <div class="sidebar-btn">Is TLOU S2 gaining momentum?</div>
+      <div class="sidebar-btn">Fastest growing markets for HotD</div>
+      <div class="sidebar-cat" style="color:#7c3aed;">🎭 Genre</div>
+      <div class="sidebar-btn">Titles w/ high starts, low comp…</div>
+      <div class="sidebar-btn">Full genre health report APAC</div>
+      <div class="sidebar-cat" style="color:#16a34a;">👤 Subscriber</div>
+      <div class="sidebar-btn">Does HotD reduce churn risk?</div>
+      <div class="sidebar-cat" style="color:#d97706;">🚨 Alerts</div>
+      <div class="sidebar-btn">Which titles need attention now?</div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section">Active Agents</div>
+      <div class="sidebar-agent">🧠 Orchestrator</div>
+      <div class="sidebar-agent">📊 Data Agent</div>
+      <div class="sidebar-agent">🔍 Perf Analyst</div>
+      <div class="sidebar-agent">📐 Benchmark Agent</div>
+      <div class="sidebar-agent">📈 Trend Agent</div>
+    </div>
+
+    <div class="content">
+
+      <!-- Filter Bar -->
+      <div class="filter-bar">
+        <div class="filter-item">
+          <div class="filter-label">Time Period</div>
+          <div class="filter-select">Last 30 days ▾</div>
+        </div>
+        <div class="filter-item">
+          <div class="filter-label">Market</div>
+          <div class="filter-select">All APAC Markets ▾</div>
+        </div>
+        <div class="filter-item">
+          <div class="filter-label">Genre</div>
+          <div class="filter-select">All Genres ▾</div>
+        </div>
+        <div class="filter-item">
+          <div class="filter-label">Format</div>
+          <div class="filter-select">All Formats ▾</div>
+        </div>
+      </div>
+
+      <!-- KPI Row -->
+      <div class="kpi-row">
+        <div class="kpi">
+          <div class="kpi-label">Total Starts</div>
+          <div class="kpi-value">847K</div>
+          <div class="kpi-sub">last 30 days</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Avg Completion Rate</div>
+          <div class="kpi-value">61.3%</div>
+          <div class="kpi-up">↑ Above benchmark</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Watch Hours</div>
+          <div class="kpi-value">2.1M</div>
+          <div class="kpi-sub">across 10 markets</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Titles Tracked</div>
+          <div class="kpi-value">52</div>
+          <div class="kpi-sub">active in period</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Titles At Risk</div>
+          <div class="kpi-value" style="color:#DC2626">8</div>
+          <div class="kpi-down">completion &lt; 45%</div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="charts-row">
+
+        <!-- Left: Horizontal Bar Chart -->
+        <div class="chart-left">
+          <div class="sec">Top 15 Titles by Total Starts</div>
+          <svg width="420" height="420" style="overflow:visible;">
+            <!-- Bars with labels -->
+            <style>
+              .bl { font-family:'Inter',sans-serif; font-size:10.5px; fill:#0f172a; dominant-baseline:middle; }
+              .bt { font-family:'Inter',sans-serif; font-size:9px; fill:#fff; dominant-baseline:middle; font-weight:600; }
+              .bv { font-family:'Inter',sans-serif; font-size:9px; fill:#64748b; dominant-baseline:middle; }
+            </style>
+            <!-- Row 0: HotD S2 -->
+            <text class="bl" x="162" y="13" text-anchor="end">House of the Dragon S2</text>
+            <rect x="168" y="5" width="220" height="17" rx="3" fill="#16a34a"/>
+            <text class="bt" x="178" y="13">74% completion</text>
+            <text class="bv" x="393" y="13">89K</text>
+            <!-- Row 1: White Lotus S3 -->
+            <text class="bl" x="162" y="40" text-anchor="end">The White Lotus S3</text>
+            <rect x="168" y="32" width="203" height="17" rx="3" fill="#16a34a"/>
+            <text class="bt" x="178" y="40">71% completion</text>
+            <text class="bv" x="376" y="40">82K</text>
+            <!-- Row 2: TLOU S2 -->
+            <text class="bl" x="162" y="67" text-anchor="end">The Last of Us S2</text>
+            <rect x="168" y="59" width="193" height="17" rx="3" fill="#16a34a"/>
+            <text class="bt" x="178" y="67">73% completion</text>
+            <text class="bv" x="366" y="67">78K</text>
+            <!-- Row 3: Succession S4 -->
+            <text class="bl" x="162" y="94" text-anchor="end">Succession S4</text>
+            <rect x="168" y="86" width="176" height="17" rx="3" fill="#16a34a"/>
+            <text class="bt" x="178" y="94">68% completion</text>
+            <text class="bv" x="349" y="94">71K</text>
+            <!-- Row 4: Dune 2 -->
+            <text class="bl" x="162" y="121" text-anchor="end">Dune 2</text>
+            <rect x="168" y="113" width="161" height="17" rx="3" fill="#16a34a"/>
+            <text class="bt" x="178" y="121">66% completion</text>
+            <text class="bv" x="334" y="121">65K</text>
+            <!-- Row 5: Barbie -->
+            <text class="bl" x="162" y="148" text-anchor="end">Barbie</text>
+            <rect x="168" y="140" width="151" height="17" rx="3" fill="#d97706"/>
+            <text class="bt" x="178" y="148">64% completion</text>
+            <text class="bv" x="324" y="148">61K</text>
+            <!-- Row 6: Euphoria S2 -->
+            <text class="bl" x="162" y="175" text-anchor="end">Euphoria S2</text>
+            <rect x="168" y="167" width="134" height="17" rx="3" fill="#dc2626"/>
+            <text class="bt" x="178" y="175">41% completion</text>
+            <text class="bv" x="307" y="175">54K</text>
+            <!-- Row 7: The Sympathizer -->
+            <text class="bl" x="162" y="202" text-anchor="end">The Sympathizer</text>
+            <rect x="168" y="194" width="119" height="17" rx="3" fill="#d97706"/>
+            <text class="bt" x="178" y="202">58% completion</text>
+            <text class="bv" x="292" y="202">48K</text>
+            <!-- Row 8: Tokyo Vice S2 -->
+            <text class="bl" x="162" y="229" text-anchor="end">Tokyo Vice S2</text>
+            <rect x="168" y="221" width="109" height="17" rx="3" fill="#16a34a"/>
+            <text class="bt" x="178" y="229">67% completion</text>
+            <text class="bv" x="282" y="229">44K</text>
+            <!-- Row 9: Mare of Easttown -->
+            <text class="bl" x="162" y="256" text-anchor="end">Mare of Easttown</text>
+            <rect x="168" y="248" width="104" height="17" rx="3" fill="#16a34a"/>
+            <text class="bt" x="178" y="256">70% completion</text>
+            <text class="bv" x="277" y="256">42K</text>
+            <!-- Row 10: Pachinko S2 -->
+            <text class="bl" x="162" y="283" text-anchor="end">Pachinko S2</text>
+            <rect x="168" y="275" width="91" height="17" rx="3" fill="#d97706"/>
+            <text class="bt" x="178" y="283">62% completion</text>
+            <text class="bv" x="264" y="283">37K</text>
+            <!-- Row 11: The Idol -->
+            <text class="bl" x="162" y="310" text-anchor="end">The Idol</text>
+            <rect x="168" y="302" width="87" height="17" rx="3" fill="#dc2626"/>
+            <text class="bt" x="178" y="310">38% completion</text>
+            <text class="bv" x="260" y="310">35K</text>
+            <!-- Row 12: Industry S2 -->
+            <text class="bl" x="162" y="337" text-anchor="end">Industry S2</text>
+            <rect x="168" y="329" width="77" height="17" rx="3" fill="#d97706"/>
+            <text class="bt" x="178" y="337">46% completion</text>
+            <text class="bv" x="250" y="337">31K</text>
+            <!-- Row 13: His Dark Materials -->
+            <text class="bl" x="162" y="364" text-anchor="end">His Dark Materials</text>
+            <rect x="168" y="356" width="74" height="17" rx="3" fill="#d97706"/>
+            <text class="bt" x="178" y="364">52% completion</text>
+            <text class="bv" x="247" y="364">30K</text>
+            <!-- Row 14: The Flash -->
+            <text class="bl" x="162" y="391" text-anchor="end">The Flash</text>
+            <rect x="168" y="383" width="69" height="17" rx="3" fill="#dc2626"/>
+            <text class="bt" x="178" y="391">29% completion</text>
+            <text class="bv" x="242" y="391">28K</text>
+            <!-- Legend -->
+            <rect x="168" y="408" width="10" height="10" rx="2" fill="#16a34a"/>
+            <text x="182" y="414" font-size="9" fill="#64748b" font-family="Inter" dominant-baseline="middle">≥65% Strong</text>
+            <rect x="248" y="408" width="10" height="10" rx="2" fill="#d97706"/>
+            <text x="262" y="414" font-size="9" fill="#64748b" font-family="Inter" dominant-baseline="middle">45–65% Watch</text>
+            <rect x="332" y="408" width="10" height="10" rx="2" fill="#dc2626"/>
+            <text x="346" y="414" font-size="9" fill="#64748b" font-family="Inter" dominant-baseline="middle">&lt;45% At-Risk</text>
+          </svg>
+        </div>
+
+        <!-- Right column -->
+        <div class="chart-right">
+
+          <!-- Donut chart -->
+          <div class="chart-card">
+            <div class="sec">Completion Rate Distribution</div>
+            <div style="display:flex; align-items:center; gap:16px;">
+              <div style="position:relative; width:120px; height:120px; flex-shrink:0;">
+                <div style="
+                  width:120px; height:120px; border-radius:50%;
+                  background: conic-gradient(
+                    #16a34a 0% 26.9%,
+                    #0ea5e9 26.9% 69.2%,
+                    #d97706 69.2% 84.6%,
+                    #dc2626 84.6% 100%
+                  );
+                "></div>
+                <div style="
+                  position:absolute; top:20px; left:20px;
+                  width:80px; height:80px; border-radius:50%;
+                  background:#fff;
+                  display:flex; align-items:center; justify-content:center;
+                  flex-direction:column;
+                ">
+                  <div style="font-size:18px; font-weight:800; color:#0f172a; line-height:1;">52</div>
+                  <div style="font-size:9px; color:#64748b; font-weight:600;">titles</div>
+                </div>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:6px; flex:1;">
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <div style="width:10px; height:10px; border-radius:2px; background:#16a34a; flex-shrink:0;"></div>
+                  <div style="font-size:10px; color:#0f172a; font-weight:600;">70%+ Champion</div>
+                  <div style="margin-left:auto; font-size:11px; font-weight:700; color:#0f172a;">14</div>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <div style="width:10px; height:10px; border-radius:2px; background:#0ea5e9; flex-shrink:0;"></div>
+                  <div style="font-size:10px; color:#0f172a; font-weight:600;">55–70% Solid</div>
+                  <div style="margin-left:auto; font-size:11px; font-weight:700; color:#0f172a;">22</div>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <div style="width:10px; height:10px; border-radius:2px; background:#d97706; flex-shrink:0;"></div>
+                  <div style="font-size:10px; color:#0f172a; font-weight:600;">45–55% Watch</div>
+                  <div style="margin-left:auto; font-size:11px; font-weight:700; color:#0f172a;">8</div>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <div style="width:10px; height:10px; border-radius:2px; background:#dc2626; flex-shrink:0;"></div>
+                  <div style="font-size:10px; color:#dc2626; font-weight:600;">Under 45% At-Risk</div>
+                  <div style="margin-left:auto; font-size:11px; font-weight:700; color:#dc2626;">8</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sparkline: Daily Starts Trend -->
+          <div class="chart-card">
+            <div class="sec">Daily Starts Trend</div>
+            <svg width="100%" viewBox="0 0 320 90" style="overflow:visible;">
+              <defs>
+                <linearGradient id="sparkfill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#4f46e5" stop-opacity="0.18"/>
+                  <stop offset="100%" stop-color="#4f46e5" stop-opacity="0.01"/>
+                </linearGradient>
+              </defs>
+              <!-- Grid lines -->
+              <line x1="0" y1="20" x2="310" y2="20" stroke="#E2E8F0" stroke-width="1"/>
+              <line x1="0" y1="45" x2="310" y2="45" stroke="#E2E8F0" stroke-width="1"/>
+              <line x1="0" y1="70" x2="310" y2="70" stroke="#E2E8F0" stroke-width="1"/>
+              <!-- Y axis labels -->
+              <text x="315" y="22" font-size="8" fill="#94a3b8" font-family="Inter" dominant-baseline="middle">90K</text>
+              <text x="315" y="47" font-size="8" fill="#94a3b8" font-family="Inter" dominant-baseline="middle">60K</text>
+              <text x="315" y="72" font-size="8" fill="#94a3b8" font-family="Inter" dominant-baseline="middle">30K</text>
+              <!-- Fill polygon -->
+              <polygon points="0,68 10.7,65 21.4,63 32.1,60 42.8,61 53.4,57 64.1,58 74.8,53 85.5,55 96.2,50 106.9,51 117.6,46 128.3,48 139,43 149.7,44 160.3,39 171,40 181.7,36 192.4,37 203.1,33 213.8,34 224.5,31 235.2,29 245.9,30 256.6,26 267.2,24 277.9,22 288.6,20 299.3,18 310,15 310,80 0,80"
+                    fill="url(#sparkfill)"/>
+              <!-- Line -->
+              <polyline points="0,68 10.7,65 21.4,63 32.1,60 42.8,61 53.4,57 64.1,58 74.8,53 85.5,55 96.2,50 106.9,51 117.6,46 128.3,48 139,43 149.7,44 160.3,39 171,40 181.7,36 192.4,37 203.1,33 213.8,34 224.5,31 235.2,29 245.9,30 256.6,26 267.2,24 277.9,22 288.6,20 299.3,18 310,15"
+                    fill="none" stroke="#4f46e5" stroke-width="2" stroke-linejoin="round"/>
+              <!-- X axis labels -->
+              <text x="0" y="86" font-size="8" fill="#94a3b8" font-family="Inter">Mar 1</text>
+              <text x="140" y="86" font-size="8" fill="#94a3b8" font-family="Inter" text-anchor="middle">Mar 16</text>
+              <text x="310" y="86" font-size="8" fill="#94a3b8" font-family="Inter" text-anchor="end">Mar 31</text>
+            </svg>
+          </div>
+
+        </div><!-- /chart-right -->
+      </div><!-- /charts-row -->
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app-shell -->
+</body>
+</html>
