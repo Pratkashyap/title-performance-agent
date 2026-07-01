@@ -62,10 +62,13 @@ class DashboardAgent:
     def __init__(self):
         self.orchestrator = Orchestrator()
 
-    def run_query(self, question: str) -> dict:
+    def run_query(self, question: str, on_live_event=None) -> dict:
         """
         Run a question through the full pipeline and return a
         dashboard-ready result dict.
+
+        on_live_event: optional callable(events_so_far) called after each
+                       agent event — use to update a live UI placeholder.
 
         Returns:
             question      — original question
@@ -87,6 +90,8 @@ class DashboardAgent:
 
         def on_status(agent, event, detail=""):
             pipeline_events.append((agent, event, detail))
+            if on_live_event:
+                on_live_event(list(pipeline_events))
 
         t0     = time.time()
         result = self.orchestrator.run(question, on_status=on_status)

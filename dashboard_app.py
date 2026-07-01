@@ -29,22 +29,40 @@ st.set_page_config(
 # ─────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
-/* App background */
-.stApp { background:#F0F2F8 !important; }
+/* App background — dark mode */
+.stApp { background:#0F172A !important; color:#E2E8F0 !important; }
 .block-container { padding-top:0.6rem !important; padding-bottom:1rem !important; }
 #MainMenu, footer, header { visibility:hidden; }
 
+/* Global text overrides */
+.stApp p, .stApp li, .stApp span, .stApp div,
+.stApp label, .stApp small { color:#CBD5E1 !important; }
+.stApp h1,.stApp h2,.stApp h3,.stApp h4 { color:#F1F5F9 !important; }
+
+/* Streamlit native widgets — dark inputs */
+.stTextInput input, .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
+    background:#1E293B !important; color:#E2E8F0 !important;
+    border-color:#334155 !important;
+}
+.stSelectbox [data-baseweb="select"] * { color:#E2E8F0 !important; }
+div[data-baseweb="popover"] { background:#1E293B !important; }
+div[data-baseweb="menu"] { background:#1E293B !important; }
+div[data-baseweb="option"] { background:#1E293B !important; color:#E2E8F0 !important; }
+div[data-baseweb="option"]:hover { background:#334155 !important; }
+.stSlider * { color:#CBD5E1 !important; }
+.stMarkdown { color:#CBD5E1 !important; }
+
 /* Sidebar */
 section[data-testid="stSidebar"] {
-    background:#1E2130 !important;
-    border-right:1px solid #2d3048;
+    background:#0D1526 !important;
+    border-right:1px solid #1e2d47;
     min-width:240px !important;
 }
 section[data-testid="stSidebar"] * { color:#CBD5E1 !important; }
 section[data-testid="stSidebar"] .stButton > button {
-    background:#2a2f47 !important;
+    background:#1E293B !important;
     color:#CBD5E1 !important;
-    border:1px solid #3d4461 !important;
+    border:1px solid #334155 !important;
     border-radius:5px !important;
     font-size:12px !important;
     font-weight:500 !important;
@@ -60,7 +78,7 @@ section[data-testid="stSidebar"] .stButton > button:hover {
 
 /* Top header bar */
 .app-header {
-    background:#1E2130;
+    background:#1E293B;
     color:#fff;
     padding:10px 20px;
     border-radius:8px;
@@ -68,6 +86,7 @@ section[data-testid="stSidebar"] .stButton > button:hover {
     display:flex;
     align-items:center;
     justify-content:space-between;
+    border:1px solid #334155;
 }
 .app-header-title { font-size:16px; font-weight:800; color:#fff; }
 .app-header-sub   { font-size:12px; color:#94A3B8; margin-top:2px; }
@@ -79,89 +98,91 @@ section[data-testid="stSidebar"] .stButton > button:hover {
 
 /* Tabs */
 .stTabs [data-baseweb="tab-list"] {
-    background:#fff;
-    border:1px solid #E2E8F0;
+    background:#1E293B;
+    border:1px solid #334155;
     border-radius:7px;
     padding:2px;
     gap:2px;
 }
 .stTabs [data-baseweb="tab"] {
-    color:#64748B; font-weight:600; font-size:13px;
+    color:#94A3B8; font-weight:600; font-size:13px;
     border-radius:5px; padding:7px 18px; background:transparent;
 }
 .stTabs [aria-selected="true"] { background:#4f46e5 !important; color:#fff !important; }
 
 /* Chat input area */
 .chat-header {
-    font-size:15px; font-weight:700; color:#0F172A;
+    font-size:15px; font-weight:700; color:#F1F5F9;
     margin-bottom:12px;
 }
-.chat-subhead { font-size:13px; color:#64748B; margin-bottom:16px; }
+.chat-subhead { font-size:13px; color:#94A3B8; margin-bottom:16px; }
 
 /* Result cards */
 .result-card {
-    background:#fff;
-    border:1px solid #E2E8F0;
+    background:#1E293B;
+    border:1px solid #334155;
     border-radius:10px;
     padding:18px 20px;
     margin-bottom:14px;
+    color:#E2E8F0;
 }
 .result-card-new {
-    background:#FAFBFF;
-    border:1.5px solid #C7D2FE;
+    background:#1a2540;
+    border:1.5px solid #4f46e5;
     border-radius:10px;
     padding:18px 20px;
     margin-bottom:14px;
+    color:#E2E8F0;
 }
 
 /* Pipeline panel */
 .pipe-header {
     font-size:12px; font-weight:700;
     text-transform:uppercase; letter-spacing:.7px;
-    color:#64748B; margin-bottom:10px;
+    color:#94A3B8; margin-bottom:10px;
 }
 .pipe-event {
-    font-family:monospace; font-size:11px; color:#475569;
-    padding:3px 0; border-bottom:1px solid #F1F5F9;
+    font-family:monospace; font-size:11px; color:#94A3B8;
+    padding:3px 0; border-bottom:1px solid #1E293B;
     display:flex; align-items:baseline; gap:6px;
 }
-.pipe-done  { color:#16A34A !important; }
-.pipe-run   { color:#4f46e5 !important; }
-.pipe-time  { color:#94A3B8; font-size:10px; margin-left:auto; }
-.pipe-section { font-size:10px; font-weight:700; color:#94A3B8;
+.pipe-done  { color:#22C55E !important; }
+.pipe-run   { color:#818CF8 !important; }
+.pipe-time  { color:#64748B; font-size:10px; margin-left:auto; }
+.pipe-section { font-size:10px; font-weight:700; color:#64748B;
     text-transform:uppercase; letter-spacing:.5px;
     margin:8px 0 3px; }
 
 /* KPI cards */
-.kpi { background:#fff; border:1px solid #E2E8F0; border-radius:10px; padding:16px 18px; }
-.kpi-label { color:#64748B; font-size:10px; font-weight:700; letter-spacing:.8px;
+.kpi { background:#1E293B; border:1px solid #334155; border-radius:10px; padding:16px 18px; }
+.kpi-label { color:#94A3B8; font-size:10px; font-weight:700; letter-spacing:.8px;
              text-transform:uppercase; margin-bottom:5px; }
-.kpi-value { color:#0f172a; font-size:24px; font-weight:800; line-height:1; }
-.kpi-sub   { color:#64748B; font-size:11px; margin-top:4px; }
-.kpi-up    { color:#16A34A; font-size:11px; margin-top:4px; font-weight:600; }
-.kpi-down  { color:#DC2626; font-size:11px; margin-top:4px; font-weight:600; }
-.kpi-warn  { color:#D97706; font-size:11px; margin-top:4px; font-weight:600; }
+.kpi-value { color:#F1F5F9; font-size:24px; font-weight:800; line-height:1; }
+.kpi-sub   { color:#94A3B8; font-size:11px; margin-top:4px; }
+.kpi-up    { color:#22C55E; font-size:11px; margin-top:4px; font-weight:600; }
+.kpi-down  { color:#F87171; font-size:11px; margin-top:4px; font-weight:600; }
+.kpi-warn  { color:#FBB F24; font-size:11px; margin-top:4px; font-weight:600; }
 
 /* Section headings */
-.sec { font-size:13px; font-weight:700; color:#0F172A;
+.sec { font-size:13px; font-weight:700; color:#F1F5F9;
        border-left:3px solid #4f46e5; padding-left:8px; margin:16px 0 8px; }
 
 /* Pills */
-.pill-red   { display:inline-block; background:#FEF2F2; border:1px solid #FCA5A5;
-              color:#DC2626; border-radius:20px; padding:2px 10px; font-size:11px; font-weight:600; }
-.pill-amber { display:inline-block; background:#FFFBEB; border:1px solid #FCD34D;
-              color:#D97706; border-radius:20px; padding:2px 10px; font-size:11px; font-weight:600; }
-.pill-green { display:inline-block; background:#F0FDF4; border:1px solid #86EFAC;
-              color:#16A34A; border-radius:20px; padding:2px 10px; font-size:11px; font-weight:600; }
+.pill-red   { display:inline-block; background:#3b0d0d; border:1px solid #7f1d1d;
+              color:#F87171; border-radius:20px; padding:2px 10px; font-size:11px; font-weight:600; }
+.pill-amber { display:inline-block; background:#3b2500; border:1px solid #92400e;
+              color:#FBB F24; border-radius:20px; padding:2px 10px; font-size:11px; font-weight:600; }
+.pill-green { display:inline-block; background:#052e16; border:1px solid #166534;
+              color:#22C55E; border-radius:20px; padding:2px 10px; font-size:11px; font-weight:600; }
 
 /* Filter bar in data tabs */
 .filter-bar {
-    background:#fff; border:1px solid #E2E8F0; border-radius:8px;
+    background:#1E293B; border:1px solid #334155; border-radius:8px;
     padding:10px 16px; margin-bottom:16px;
     display:flex; align-items:center; gap:12px;
 }
 .filter-label {
-    font-size:10px; font-weight:700; color:#64748B;
+    font-size:10px; font-weight:700; color:#94A3B8;
     text-transform:uppercase; letter-spacing:.5px;
 }
 
@@ -204,8 +225,8 @@ COLORS = {
     "green":  "#16a34a", "amber":  "#d97706", "red": "#dc2626",
     "slate":  "#64748b",
 }
-CHART_BG   = "#FFFFFF"
-GRID_COLOR = "#E2E8F0"
+CHART_BG   = "#1E293B"
+GRID_COLOR = "#334155"
 
 
 # ─────────────────────────────────────────────────────────────
@@ -356,80 +377,94 @@ tab_ai, tab1, tab2, tab3, tab4, tab5 = st.tabs([
 # ══════════════════════════════════════════════════════════════
 # TAB: AGENT CHAT
 # ══════════════════════════════════════════════════════════════
+def _render_pipeline_html(events: list, elapsed: float = 0, score=None, done: bool = False) -> str:
+    """Build the HTML for the live pipeline panel from accumulated events."""
+    agent_events: dict = {}
+    for ag, ev, detail in events:
+        agent_events.setdefault(ag, []).append((ev, detail))
+
+    rows = ""
+    for ag, evs in agent_events.items():
+        ic, lbl, _ = AGENT_ICONS.get(ag, ("·", ag, ""))
+        is_done  = any(e == "done" for e, _ in evs)
+        is_start = not is_done
+        color    = "#22C55E" if is_done else "#818CF8"
+        spinner  = "" if is_done else " ⟳"
+        done_detail = next((d for e, d in evs if e == "done"), "")
+
+        rows += (
+            f"<div style='border-bottom:1px solid #1E293B;padding:5px 0;'>"
+            f"<div style='font-size:12px;color:{color};font-weight:600;'>"
+            f"{ic} {lbl}{spinner}</div>"
+        )
+        for ev, detail in evs:
+            if ev in ("start", "done"):
+                continue
+            rows += (
+                f"<div style='font-size:10px;font-family:monospace;"
+                f"color:#64748B;padding-left:14px;'>"
+                f"↳ {ev}"
+                f"{(' · ' + str(detail)[:35]) if detail else ''}</div>"
+            )
+        if done_detail:
+            rows += (
+                f"<div style='font-size:10px;color:#22C55E;"
+                f"font-family:monospace;padding-left:14px;'>"
+                f"✓ {done_detail}</div>"
+            )
+        rows += "</div>"
+
+    footer = ""
+    if done and elapsed:
+        sc_col = "#22c55e" if (score or 0) >= 8 else "#d97706" if (score or 0) >= 6 else "#dc2626"
+        sc_str = f"  ·  <span style='color:{sc_col};font-weight:700;'>Quality {score}/10</span>" if score else ""
+        footer = f"<div style='margin-top:10px;font-size:11px;color:#94A3B8;'>⏱ {elapsed}s{sc_str}</div>"
+    elif events:
+        footer = "<div style='margin-top:8px;font-size:10px;color:#818CF8;'>● running…</div>"
+
+    if not events:
+        body = "<div style='font-size:11px;color:#475569;padding:6px 0;'>Ask a question to see agent activity here.</div>"
+    else:
+        body = rows + footer
+
+    return (
+        "<div style='background:#1E293B;border-radius:8px;padding:14px 14px 10px;border:1px solid #334155;'>"
+        "<div style='font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;"
+        "color:#94A3B8;margin-bottom:10px;'>📡 Pipeline</div>"
+        + body +
+        "</div>"
+    )
+
+
 with tab_ai:
     chat_col, pipe_col = st.columns([3, 1], gap="medium")
 
-    # ── PIPELINE PANEL (right) ─────────────────────────────────
+    # ── PIPELINE PANEL (right) — always rendered, live during query ──
     with pipe_col:
-        st.markdown(
-            "<div style='background:#1E2130;border-radius:8px;padding:14px 14px 10px;'>"
-            "<div class='pipe-header' style='color:#94A3B8;'>📡 Pipeline</div>",
-            unsafe_allow_html=True,
-        )
+        pipeline_placeholder = st.empty()
 
-        if not st.session_state.ai_history:
-            st.markdown(
-                "<div style='font-size:11px;color:#475569;padding:6px 0;'>"
-                "Ask a question to see agent activity here.</div>",
+        # Show last result or idle state
+        if st.session_state.ai_history:
+            last = st.session_state.ai_history[0]
+            pipeline_placeholder.markdown(
+                _render_pipeline_html(
+                    last.get("pipeline", []),
+                    elapsed=last.get("elapsed_s", 0),
+                    score=last.get("score"),
+                    done=True,
+                ),
                 unsafe_allow_html=True,
             )
         else:
-            last = st.session_state.ai_history[0]
-            pipeline = last.get("pipeline", [])
-            elapsed  = last.get("elapsed_s", 0)
-
-            # Group events by agent
-            agent_events: dict = {}
-            for ag, ev, detail in pipeline:
-                agent_events.setdefault(ag, []).append((ev, detail))
-
-            for ag, events in agent_events.items():
-                ic, lbl, _ = AGENT_ICONS.get(ag, ("·", ag, ""))
-                is_done = any(e == "done" for e, _ in events)
-                done_detail = next((d for e, d in events if e == "done"), "")
-                color = "#16A34A" if is_done else "#4f46e5"
-
-                st.markdown(
-                    f"<div style='border-bottom:1px solid #2d3048;padding:5px 0;'>"
-                    f"<div style='font-size:12px;color:{color};font-weight:600;'>"
-                    f"{ic} {lbl}</div>",
-                    unsafe_allow_html=True,
-                )
-                for ev, detail in events:
-                    if ev in ("start", "done"):
-                        continue
-                    ev_color = "#64748B"
-                    st.markdown(
-                        f"<div style='font-size:10px;font-family:monospace;"
-                        f"color:{ev_color};padding-left:14px;'>"
-                        f"↳ {ev}"
-                        f"{(' · ' + str(detail)[:35]) if detail else ''}</div>",
-                        unsafe_allow_html=True,
-                    )
-                if done_detail:
-                    st.markdown(
-                        f"<div style='font-size:10px;color:#16A34A;"
-                        f"font-family:monospace;padding-left:14px;'>"
-                        f"✓ done · {done_detail}</div>",
-                        unsafe_allow_html=True,
-                    )
-                st.markdown("</div>", unsafe_allow_html=True)
-
-            sc = last.get("score")
-            sc_col = "#16a34a" if (sc or 0) >= 8 else "#d97706" if (sc or 0) >= 6 else "#dc2626"
-            st.markdown(
-                f"<div style='margin-top:10px;font-size:11px;color:#94A3B8;'>"
-                f"⏱ {elapsed}s total"
-                f"{'  ·  <span style=\"color:' + sc_col + ';font-weight:700;\">Quality ' + str(sc) + '/10</span>' if sc else ''}"
-                f"</div>",
+            pipeline_placeholder.markdown(
+                _render_pipeline_html([]),
                 unsafe_allow_html=True,
             )
 
-        st.markdown("</div>", unsafe_allow_html=True)
-
-        # Agent roster (always visible)
+        # Agent roster (always visible below pipeline)
         st.markdown(
-            "<div style='background:#1E2130;border-radius:8px;padding:12px 14px;margin-top:10px;'>"
+            "<div style='background:#1E293B;border-radius:8px;padding:12px 14px;"
+            "margin-top:10px;border:1px solid #334155;'>"
             "<div style='font-size:10px;font-weight:700;color:#64748B;"
             "text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;'>"
             "Agent Roster</div>",
@@ -480,8 +515,15 @@ with tab_ai:
         if ask_btn and question.strip():
             st.session_state.ai_prefill = ""
             st.session_state.ai_inp_key += 1
-            with st.spinner("Routing to agents — 30–75 seconds…"):
-                result = agent.run_query(question.strip())
+
+            # Live-update the pipeline panel on every agent event
+            def _live_update(events_so_far):
+                pipeline_placeholder.markdown(
+                    _render_pipeline_html(events_so_far, done=False),
+                    unsafe_allow_html=True,
+                )
+
+            result = agent.run_query(question.strip(), on_live_event=_live_update)
             st.session_state.ai_history.insert(0, result)
             if len(st.session_state.ai_history) > 8:
                 st.session_state.ai_history = st.session_state.ai_history[:8]
